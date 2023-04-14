@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
+import re
 
 class Entry(ABC):
-
     TIME_PATTERN = "([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]"
 
     def __init__(self):
@@ -12,6 +12,11 @@ class IndividualEntry(Entry):
     # seed time
     # ranking
     # score
+    def __init__(self, event_string):
+        re.match(Entry.TIME_PATTERN, event_string)
+            
+        pass
+
     def __init__(self, swimmer_name, seed_time, ranking, score):
         self.swimmer_name = swimmer_name
         self.seed_time = seed_time
