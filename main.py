@@ -36,3 +36,11 @@ print(e.is_relay)
 print(e.number)
 
 print(event_string)
+
+e = IndividualEntry("Lav 27.23  22 Ponsardin, Alice 47") 
+
+print(e.name)
+print(e.seed_time)
+print(e.age)
+print(e.ranking)
+print(e.team_name)
