@@ -2,16 +2,23 @@ from abc import ABC, abstractmethod
 import re
 
 class Entry(ABC):
-    TIME_PATTERN = "([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]"
+    """
+    Entry class
+    """
+    TIME_PATTERN = "(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9])|NT"
 
     def __init__(self):
         pass
 
 class IndividualEntry(Entry):
-    # name
-    # seed time
-    # ranking
-    # score
+    """
+    Fields:
+    name
+    seed_time
+    ranking
+    score
+    team_name
+    """
     def __init__(self, event_string):
         """
         Takes in the string (event_string) of the entry and parses it into the different fields.
@@ -32,8 +39,8 @@ class IndividualEntry(Entry):
         self.name = rest_of_string[0:ranking_search.start()].strip()
         self.ranking = rest_of_string[ranking_search.start():ranking_search.end()].strip()
 
-        def __str__(self):
-            return f"Name : {self.name}, Seed Time: {self.seed_time}, Ranking: {self.ranking}, Team Name: {self.team_name}, Age: {self.age}"
+    def __str__(self):
+        return f"Name : {self.name}, Seed Time: {self.seed_time}, Ranking: {self.ranking}, Team Name: {self.team_name}, Age: {self.age} \n"
 
 class RelayEntry(Entry):
     # team_name
