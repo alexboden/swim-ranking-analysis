@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 import re
+from config import individual_points
 
 class Entry(ABC):
     """
@@ -37,10 +38,14 @@ class IndividualEntry(Entry):
         
         ranking_search = re.search("[0-9]+", rest_of_string)
         self.name = rest_of_string[0:ranking_search.start()].strip()
-        self.ranking = rest_of_string[ranking_search.start():ranking_search.end()].strip()
-
+        self.ranking = int(rest_of_string[ranking_search.start():ranking_search.end()].strip())
+        if self.ranking in individual_points:
+            self.points = individual_points[self.ranking]
+        else:
+            self.points = 0
+   
     def __str__(self):
-        return f"Name : {self.name}, Seed Time: {self.seed_time}, Ranking: {self.ranking}, Team Name: {self.team_name}, Age: {self.age} \n"
+        return f"Name : {self.name}, Seed Time: {self.seed_time}, Ranking: {self.ranking}, Points: {self.points}, Team Name: {self.team_name}, Age: {self.age} \n"
 
 class RelayEntry(Entry):
     # team_name

@@ -30,17 +30,12 @@ event_string = text[regex.find_event_headers(text)[0][1]:regex.find_event_header
 e = Event(text[regex.find_event_headers(text)[0][0]:regex.find_event_headers(text)[0][1]], event_string)
 
 print(e)
+total_points = {}
+team_points = {}
 
-# print(e.event_name)
-# print(e.is_relay)
-# print(e.number)
+for entry in e.entries:
+	total_points[entry.name] = total_points.get(entry.name, 0) + entry.points
+	team_points[entry.team_name] = team_points.get(entry.team_name, 0) + entry.points
 
-# print(event_string)
-
-# e = IndividualEntry("Lav 27.23  22 Ponsardin, Alice 47") 
-# print(str(e))
-# print(e.name)
-# print(e.seed_time)
-# print(e.age)
-# print(e.ranking)
-# print(e.team_name)
+print(total_points)
+print(team_points)	
