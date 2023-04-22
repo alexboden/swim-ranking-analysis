@@ -1,7 +1,47 @@
+import regex
+from Meet.event import Event
+
 class Meet:
-    def __init__(self):
-        # name
-        # scoring system
-		# - ind vs relay
-        # events
-        pass
+    """
+    A class representing a meet.
+
+    Attributes:
+    - events (list of Event objects): the list of events in the meet
+
+    Methods:
+    - __init__(self, extracted_text): initializes a Meet object with the given extracted text
+    - __str__(self): returns a string representation of the Meet object
+    """
+
+    def __init__(self, extracted_text):
+        """
+        Initializes a Meet object with the given extracted text.
+
+        Args:
+        - extracted_text (str): the extracted text to parse and extract event information from
+
+        Returns:
+        - None
+        """
+        self.events = []
+        event_header_strings = regex.find_event_headers(extracted_text)
+
+        for i in range(len(event_header_strings)):
+            if (i != len(event_header_strings) - 1):
+                event_header_string = extracted_text[event_header_strings[i][0]:event_header_strings[i][1]]
+                if ("Relay" in event_header_string):
+                    continue
+                e = Event(event_header_string, extracted_text[event_header_strings[i][1]:event_header_strings[i+1][0]])
+                self.events += [e]
+            else:
+                continue
+                # print(extracted_text[regex.find_event_headers(extracted_text)[i][0]:regex.find_event_headers(extracted_text)[i][1]])
+
+    def __str__(self):
+        """
+        Returns a string representation of the Meet object.
+
+        Returns:
+        - str: the string representation of the Meet object
+        """
+        return f'Meet \nNumber of events: {len(self.events)}'

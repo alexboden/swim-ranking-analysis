@@ -2,9 +2,33 @@ from Meet.entry import IndividualEntry, RelayEntry
 import re
 
 class Event:
-    """Event class"""
+    """
+    A class representing a single event in a meet.
+
+    Attributes:
+    -----------
+    event_name : str
+        The name of the event.
+    number : str
+        The number of the event.
+    is_relay : bool
+        Whether the event is a relay event or not.
+    entries : List[Union[IndividualEntry, RelayEntry]]
+        A list of the entries for the event.
+
+    Methods:
+    --------
+    __init__(self, event_header_string: str, entry_string: str) -> None
+        Initializes a new instance of the Event class.
+    __separate_entries_individual(self, input_string: str) -> List[str]
+        Returns a list of individual entry strings parsed from the input string.
+    __str__(self) -> str
+        Returns a string representation of the event.
+    """
+    
     # Regex patterns
-    EVENT = "[a-zA-Z].*?\s*(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]|NT)\s*\d\d\s\D*\d*"
+    EVENT_PATTERN = "[a-zA-Z].*?\s*(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]|NT)\s*\d\d\s\D*\d*"
+
     def __init__(self, event_header_string, entry_string):
         # eventName
         # number
@@ -31,17 +55,26 @@ class Event:
             self.event_name = ' '.join(words[2:7]) # eventName ei Women 50 SC Freestyle
 
         self.entries = []
-        entry_strings = self.__seperate_entrys_individual(entry_string)
+        entry_strings = self.__separate_entries_individual(entry_string)
         for entry_string in entry_strings:
             print(entry_string)
             self.entries.append(IndividualEntry(entry_string))
 
-    def __seperate_entrys_individual(self, input_string):
+    def __separate_entries_individual(self, input_string):
         """
-        Match a string against the EVENT regular expression and return a list of
-        all matched event.
+        Returns a list of individual entry strings parsed from the input string.
+
+        Parameters:
+        -----------
+        input_string : str
+            The string to parse.
+
+        Returns:
+        --------
+        List[str]
+            A list of individual entry strings.
         """
-        it = re.finditer(Event.EVENT, input_string)
+        it = re.finditer(Event.EVENT_PATTERN, input_string)
         ret = []
         for name in it:
             ret.append(str(name.group(0)).strip())
@@ -49,7 +82,15 @@ class Event:
         return ret
 
     def __str__(self) -> str:
-        s = f"Event: {self.event_name} {self.number} \n"
+        """
+        Returns a string representation of the event.
+
+        Returns:
+        --------
+        str
+            The string representation of the event.
+        """
+        s = f"Event: {self.number} {self.event_name} \n"
         for entry in self.entries:
             s += str(entry)
         return s

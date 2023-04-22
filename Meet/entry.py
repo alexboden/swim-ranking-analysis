@@ -4,30 +4,45 @@ from config import individual_points
 
 class Entry(ABC):
     """
-    Entry class
+    An abstract base class for entries.
+
+    Attributes:
+        TIME_PATTERN (str): A regular expression pattern for matching time strings.
     """
+
     TIME_PATTERN = "(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9])|NT"
 
+    @abstractmethod
     def __init__(self):
+        """
+        Constructor for Entry class.
+        """
         pass
 
 class IndividualEntry(Entry):
     """
-    Fields:
-    name
-    seed_time
-    ranking
-    score
-    team_name
+    A class representing an individual entry.
+
+    Attributes:
+        team_name (str): The name of the team.
+        seed_time (str): The seed time for the entry.
+        age (str): The age of the entrant.
+        name (str): The name of the entrant.
+        ranking (int): The ranking of the entrant.
+        points (int): The number of points earned by the entrant.
     """
+
     def __init__(self, event_string):
         """
-        Takes in the string (event_string) of the entry and parses it into the different fields.
-        Must be in the format of:
-            "Lav 27.23  22 Ponsardin, Alice 47"
+            Constructor for IndividualEntry class.
+
+            Args:
+                event_string (str): The string representation of the entry.
+                    Must be in the format of "team_name seed_time age name ranking".
         """
+
         seed_time_search = re.search(Entry.TIME_PATTERN, event_string)
-        
+
         self.team_name = event_string[0:seed_time_search.start()].strip()
         self.seed_time = event_string[seed_time_search.start():seed_time_search.end()].strip()
         
@@ -45,6 +60,12 @@ class IndividualEntry(Entry):
             self.points = 0
    
     def __str__(self):
+        """
+        Returns a string representation of the IndividualEntry object.
+
+        Returns:
+            str: A string representation of the IndividualEntry object.
+        """
         return f"Name : {self.name}, Seed Time: {self.seed_time}, Ranking: {self.ranking}, Points: {self.points}, Team Name: {self.team_name}, Age: {self.age} \n"
 
 class RelayEntry(Entry):
