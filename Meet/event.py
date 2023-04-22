@@ -14,6 +14,10 @@ class Event:
         
         if "Relay" in event_header_string:
             self.is_relay = True
+            self.event_name = 'bruh'
+            self.entries = []
+            self.number = 0
+            return
         else:
             self.is_relay = False
 
