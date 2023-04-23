@@ -1,5 +1,6 @@
 import regex
 from Meet.event import Event
+from Meet.swimmer import Swimmer
 
 class Meet:
     """
@@ -32,11 +33,34 @@ class Meet:
                 if ("Relay" in event_header_string):
                     continue
                 e = Event(event_header_string, extracted_text[event_header_strings[i][1]:event_header_strings[i+1][0]])
-                self.events += [e]
+                
+                duplicate = False
+                for event in self.events:
+                    if (event.number == e.number):
+                        event.entries += e.entries
+                        duplicate = True
+                        break
+                if not duplicate:
+                    self.events += [e]
+
             else:
                 continue
                 # print(extracted_text[regex.find_event_headers(extracted_text)[i][0]:regex.find_event_headers(extracted_text)[i][1]])
 
+    
+    def get_swimmer_breakdown(self, gender):
+        SwimmerBreakdown = {}
+        for event in self.events:
+            if event.gender != gender:
+                continue
+            for entry in event.entries:
+                if entry.name not in SwimmerBreakdown:
+                    SwimmerBreakdown[entry.name] = Swimmer(entry.name, gender)
+                
+                SwimmerBreakdown[entry.name].add_to_entries(entry)
+        return SwimmerBreakdown
+            
+            
     def __str__(self):
         """
         Returns a string representation of the Meet object.

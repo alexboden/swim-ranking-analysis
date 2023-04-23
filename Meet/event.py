@@ -15,7 +15,8 @@ class Event:
         Whether the event is a relay event or not.
     entries : List[Union[IndividualEntry, RelayEntry]]
         A list of the entries for the event.
-
+	gender : str
+		Gender that is competing in the event.
     Methods:
     --------
     __init__(self, event_header_string: str, entry_string: str) -> None
@@ -30,21 +31,20 @@ class Event:
     EVENT_PATTERN = "[a-zA-Z].*?\s*(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]|NT)\s*\d\d\s\D*\d*"
 
     def __init__(self, event_header_string, entry_string):
-        # eventName
-        # number
-        # isRelay
-        # entries
-        # gender
-        
         if "Relay" in event_header_string:
             self.is_relay = True
-            self.event_name = 'bruh'
+            self.event_name = ''
             self.entries = []
             self.number = 0
             return
         else:
             self.is_relay = False
 
+        if "Women" in event_header_string:
+            self.gender = "Women"
+        else:
+            self.gender = "Men"
+        
         # split the string into a list of words
         words = event_header_string.split()
         self.number = words[1] # number ei 1
@@ -57,7 +57,8 @@ class Event:
         self.entries = []
         entry_strings = self.__separate_entries_individual(entry_string)
         for entry_string in entry_strings:
-            print(entry_string)
+            if "_" in entry_string:
+                continue
             self.entries.append(IndividualEntry(entry_string))
 
     def __separate_entries_individual(self, input_string):

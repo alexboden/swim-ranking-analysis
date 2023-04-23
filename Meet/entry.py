@@ -66,7 +66,7 @@ class IndividualEntry(Entry):
         Returns:
             str: A string representation of the IndividualEntry object.
         """
-        return f"Name : {self.name}, Seed Time: {self.seed_time}, Ranking: {self.ranking}, Points: {self.points}, Team Name: {self.team_name}, Age: {self.age} \n"
+        return f"{self.ranking} {self.name} {self.seed_time} {self.team_name} {self.points} \n"
 
 class RelayEntry(Entry):
     # team_name
