@@ -38,14 +38,23 @@ m = Meet(text_extract)
 
 x = m.get_swimmer_breakdown("Men")
 
-new_x = {}
-
+individual = {}
 for key in x:
     logger.info(x[key].name + " " + str(x[key].points) + " " + str(len(x[key].entries)))
     for entry in x[key].entries:
         logger.info("           " + str(entry).strip())
-    new_x[x[key].name] = x[key].points
+    individual[x[key].name] = x[key].points
 
-new_x = sorted(new_x.items(), key=lambda x: x[1], reverse=True)
+individual = sorted(individual.items(), key=lambda x: x[1], reverse=True)
  
-pprint(new_x)
+teams = m.get_team_breakdown("Men")
+        
+pprint(teams)
+
+
+# for team in teams:
+#     logging.info(teams[team].name + " " + str(teams[team].points) + " " + str(len(teams[team].swimmers)))
+#     for swimmer in teams[team].swimmers:
+#         logging.info("           " + swimmer.name + " " + str(swimmer.points) + " " + str(len(swimmer.entries)))
+#         for entry in swimmer.entries:
+#             logging.info("                   " + str(entry).strip())

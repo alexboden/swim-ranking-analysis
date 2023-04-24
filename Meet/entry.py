@@ -32,7 +32,7 @@ class IndividualEntry(Entry):
         points (int): The number of points earned by the entrant.
     """
 
-    def __init__(self, event_string):
+    def __init__(self, event_string, event_name):
         """
             Constructor for IndividualEntry class.
 
@@ -40,7 +40,8 @@ class IndividualEntry(Entry):
                 event_string (str): The string representation of the entry.
                     Must be in the format of "team_name seed_time age name ranking".
         """
-
+        self.event_name = event_name
+  
         seed_time_search = re.search(Entry.TIME_PATTERN, event_string)
 
         self.team_name = event_string[0:seed_time_search.start()].strip()
@@ -68,6 +69,16 @@ class IndividualEntry(Entry):
         """
         return f"{self.ranking} {self.name} {self.seed_time} {self.team_name} {self.points} \n"
 
+    def to_dict(self):
+        return {
+            "event_name": self.event_name,
+            "ranking": self.ranking,
+            "time": self.seed_time,
+            "name": self.name,
+            "team": self.team_name,
+            "points": self.points
+        }
+        
 class RelayEntry(Entry):
     # team_name
     # seed_time

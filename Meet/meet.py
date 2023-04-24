@@ -1,6 +1,7 @@
 import regex
 from Meet.event import Event
 from Meet.swimmer import Swimmer
+from Meet.team import Team
 
 class Meet:
     """
@@ -38,6 +39,8 @@ class Meet:
                 for event in self.events:
                     if (event.number == e.number):
                         event.entries += e.entries
+                        for entry in e.entries:
+                            entry.event_name = event.event_name
                         duplicate = True
                         break
                 if not duplicate:
@@ -49,18 +52,30 @@ class Meet:
 
     
     def get_swimmer_breakdown(self, gender):
-        SwimmerBreakdown = {}
+        swimmer_breakdown = {}
         for event in self.events:
             if event.gender != gender:
                 continue
             for entry in event.entries:
-                if entry.name not in SwimmerBreakdown:
-                    SwimmerBreakdown[entry.name] = Swimmer(entry.name, gender)
+                if entry.name not in swimmer_breakdown:
+                    swimmer_breakdown[entry.name] = Swimmer(entry.name, entry.team_name, gender)
                 
-                SwimmerBreakdown[entry.name].add_to_entries(entry)
-        return SwimmerBreakdown
+                swimmer_breakdown[entry.name].add_to_entries(entry)
+        return swimmer_breakdown
             
-            
+    def get_team_breakdown(self, gender):
+        swimmer_breakdown = self.get_swimmer_breakdown(gender)
+
+        team_breakdown = {}
+        
+        for key in swimmer_breakdown:
+            swimmer = swimmer_breakdown[key]
+            if swimmer.team_name not in team_breakdown:
+                team_breakdown[swimmer.team_name] = Team(swimmer.team_name)
+            team_breakdown[swimmer.team_name].add_swimmer(swimmer)
+
+        return team_breakdown
+    
     def __str__(self):
         """
         Returns a string representation of the Meet object.

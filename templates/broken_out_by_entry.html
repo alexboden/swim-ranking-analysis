@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Entries</title>
+	<button class="btn btn-primary mb-3" type="button" id="btn-collapse-all">Collapse All</button>
+	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<h1 class="my-5">Entries</h1>
+		{% for event in events %}
+		<div class="card my-3">
+				<div class="row">
+					<div class="col-md-8">
+						<h2 class="mb-0">{{ event }}</h2>
+					</div>
+					<div class="col-md-4 text-right">
+						<button class="btn btn-primary mb-3" type="button" id="btn-toggle-table-{{ event }}"
+							data-table-id="{{ event }}">
+							Toggle Table
+						</button>
+					</div>
+				</div>
+		</div>
+
+		<table class="results-table table" id="{{ event }}-table">
+			<thead>
+				<tr>
+					<th>Ranking</th>
+					<th>Name</th>
+					<th>Seed Time</th>
+					<th>Team</th>
+					<th>Points</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for entry in events[event] %}
+				<tr>
+					<td>{{ entry['ranking'] }}</td>
+					<td>{{ entry['name'] }}</td>
+					<td>{{ entry['seed_time'] }}</td>
+					<td>{{ entry['team_name'] }}</td>
+					<td>{{ entry['points'] }}</td>
+					<td>
+						<button type="button" class="btn btn-move-up btn-secondary">Move Up</button>
+						<button type="button" class="btn btn-move-down btn-secondary">Move Down</button>
+						<button type="button" class="btn btn-delete btn-warning">Delete</button>
+
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% endfor %}
+	</div>
+
+	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='table.js') }}"></script>
+	<script src="{{ url_for('static', filename='collapsible.js') }}"></script>
+
+
+</body>
+</html>

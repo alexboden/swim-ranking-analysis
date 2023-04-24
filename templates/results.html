@@ -1,0 +1,30 @@
+<html>
+
+
+<body>
+	<h1>Results</h1>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Points</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key in results %}
+			<tr data-id="{{ key }}">
+				<td>{{ results[key].name }}</td>
+				<td>{{ results[key].points }}</td>
+				<td>
+					<button type="button" class="btn-move-up">Move Up</button>
+					<button type="button" class="btn-move-down">Move Down</button>
+					<button type="button" class="btn-delete">Delete</button>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<script src="{{ url_for('static', filename='table.js') }}"></script>
+</body>
+</html>

@@ -59,7 +59,7 @@ class Event:
         for entry_string in entry_strings:
             if "_" in entry_string:
                 continue
-            self.entries.append(IndividualEntry(entry_string))
+            self.entries.append(IndividualEntry(entry_string, self.event_name))
 
     def __separate_entries_individual(self, input_string):
         """

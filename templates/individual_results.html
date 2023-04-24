@@ -1,0 +1,38 @@
+<html>
+
+<body>
+	<h1>{{ event.name }}</h1>
+	<button type="button" id="btn-toggle-table">Toggle Table</button>
+	<table id="results-table">
+		<thead>
+			<tr>
+				<th>Rank</th>
+				<th>Team</th>
+				<th>Name</th>
+				<th>Seed Time</th>
+				<th>Points</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for entry in event.entries %}
+			<tr data-id="{{ key }}">
+				<td>{{ entry.ranking }}</td>
+				<td>{{ entry.team_name }}</td>
+				<td>{{ entry.name }}</td>
+				<td>{{ entry.seed_time }}</td>
+				<td>{{ entry.points }}</td>
+				<td>
+					<button type="button" class="btn-move-up">Move Up</button>
+					<button type="button" class="btn-move-down">Move Down</button>
+					<button type="button" class="btn-delete">Delete</button>
+				</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<script src="{{ url_for('static', filename='table.js') }}"></script>
+	<script src="{{ url_for('static', filename='collapsible.js') }}"></script>
+</body>
+
+</html>
