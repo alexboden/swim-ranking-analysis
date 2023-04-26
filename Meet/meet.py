@@ -1,9 +1,10 @@
-import regex
+import re
 from Meet.event import Event
 from Meet.swimmer import Swimmer
 from Meet.team import Team
 
 class Meet:
+    EVENT_HEADER = "Event.*?Time"
     """
     A class representing a meet.
 
@@ -26,7 +27,7 @@ class Meet:
         - None
         """
         self.events = []
-        event_header_strings = regex.find_event_headers(extracted_text)
+        event_header_strings = self.find_event_headers(extracted_text)
 
         for i in range(len(event_header_strings)):
             if (i != len(event_header_strings) - 1):
@@ -84,3 +85,13 @@ class Meet:
         - str: the string representation of the Meet object
         """
         return f'Meet \nNumber of events: {len(self.events)}'
+
+    def find_event_headers(self, input_string):
+        """
+        Match a string against the EVENT_HEADER regular expression and return a list of
+        all matched times.
+        """
+        it = re.finditer(self.EVENT_HEADER, input_string, flags=re.S)
+        ret = []
+        for name in it:
+            ret.append(name.span())

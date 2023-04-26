@@ -11,6 +11,7 @@ for (let i = 0; i < moveUpButtons.length; i++) {
             swapValues(row, prevRow);
             tableBody.insertBefore(row, prevRow);
 			let eventId = table.id.slice(0, -6);
+			switchSwimmers(eventId, row.cells[1].textContent, prevRow.cells[1].textContent);
 			console.log(`Swimmer: ${row.cells[1].textContent}, Event: ${eventId}`);
             console.log(`Swimmer: ${prevRow.cells[1].textContent}, Event: ${eventId}`);
 		}
@@ -47,4 +48,32 @@ for (let i = 0; i < deleteButtons.length; i++) {
         let row = this.parentNode.parentNode;
         row.parentNode.removeChild(row);
     });
+}
+
+// Makes API call to switch swimmers
+function switchSwimmers(event, name1, name2) {
+  fetch('/swap_swimmers', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      event: event,
+      name1: name1,
+      name2: name2
+    })
+  })
+  .then(response => {
+    if (response.ok) {
+      // Handle successful response here
+      console.log('Swimmers switched successfully!');
+    } else {
+      // Handle error response here
+      console.error('Error switching swimmers:', response.statusText);
+    }
+  })
+  .catch(error => {
+    // Handle network error here
+    console.error('Network error:', error);
+  });
 }

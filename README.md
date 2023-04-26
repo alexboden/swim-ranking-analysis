@@ -11,4 +11,4 @@ brew services start mongodb-community
 to start mongodb server
 
 # Flask Notes
-flask --app test run
+flask --app test run --debug
