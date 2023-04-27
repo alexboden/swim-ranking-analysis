@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, jsonify, redirect, u
 from Meet.meet import Meet
 from pypdf import PdfReader
 from pymongo import MongoClient
+from config import individual_points
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['swimdatabase']
@@ -94,8 +95,10 @@ def update_swimmer():
     request_json = request.get_json()
     event = request_json['event']
     swimmer = request_json['name']
-    points = request_json['points']
     ranking = request_json['rank']
+    points = 0
+    if ranking <= 16:
+        points = individual_points[ranking]
     
     status = collection.update_one({'name': swimmer, 'event_name': event}, {'$set': {'points': points, 'ranking': ranking}})
     if status is not None:

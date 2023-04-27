@@ -63,7 +63,6 @@ function swapValues(row1, row2) {
 }
 
 // Delete row
-// Delete row
 let deleteButtons = document.querySelectorAll('.btn-delete');
 for (let i = 0; i < deleteButtons.length; i++) {
     deleteButtons[i].addEventListener('click', function () {
@@ -77,7 +76,12 @@ for (let i = 0; i < deleteButtons.length; i++) {
         let rows = tableBody.rows;
         for (let j = 0; j < rows.length; j++) {
             let currentRank = j + 1;
-            let currentPoints = individual_points[currentRank];
+			let currentPoints = 0;
+
+            if(currentRank <= Object.keys(individual_points).length) {
+				currentPoints = individual_points[currentRank];
+			}
+			// currentPoints = 0;
             rows[j].cells[0].textContent = currentRank;
             rows[j].cells[4].textContent = currentPoints;
 
