@@ -16,3 +16,5 @@ individual_points = {
     15: 2,
     16: 1
 }
+
+MAX_INDIVIDUAL_EVENTS = 4

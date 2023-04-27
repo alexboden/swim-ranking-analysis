@@ -24,3 +24,16 @@ document.getElementById('btn-collapse-all').addEventListener('click', function (
 		table.style.display = 'none';
 	}
 });
+
+
+team_toggle_buttons = document.querySelectorAll('#btn-collapse-team');
+
+for (let i = 0; i < team_toggle_buttons.length; i++) {
+    team_toggle_buttons[i].addEventListener('click', function() {
+        let teamId = team_toggle_buttons[i].getAttribute('team-id');
+        let div = document.getElementById('team-div-' + teamId);
+		console.log(div)
+		div.style.display = 'none';
+    });
+}
+

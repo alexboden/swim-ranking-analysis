@@ -4,14 +4,8 @@ function updatePointTotals() {
   fetch('/points_by_team')
     .then(response => response.json())
     .then(data => {
-		console.log(data);
-		console.log(data);	
 		for (key in data) {
-			console.log(key.split(" ")[0]);
-			console.log(`team-points-${key.split(" ")[0]}`)
-			console.log(data[key])
-
-			document.querySelector(`#team-points-${key.split(" ")[0]}`).innerHTML = `${key} : ${data[key]}`;
+			document.querySelector(`#team-points-${key.split(" ")[0]}`).innerHTML = `${key}: ${data[key]}`;
 		}
       });
 }

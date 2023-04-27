@@ -1,0 +1,80 @@
+{% include 'header.html' %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Entries by Team</title>
+	<!-- Bootstrap CSS -->
+	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
+</head>
+
+<body>
+	<div class="container mt-5">
+		<h1>Entries by Team</h1>
+
+		<button class="btn btn-primary" type="button" id="btn-collapse-all">Collapse All</button>
+
+		{% for team_name, team_data in entries_by_team.items() %}
+		<div class="card mt-4">
+			<div class="card-header">
+				<h1>Team: {{ team_name }}</h1>
+			</div>
+		</div>
+
+	<div class="card-body">
+		<h2 class="card-text">Total Points: {{ team_data['points'] }}</h2>
+		<h2 class="card-text">Number of Swimmers: {{ team_data['number_of_swimmers'] }}</h2>
+		<button class="btn btn-primary" id="btn-collapse-team" team-id={{team_name}}>Collapse All</button>
+		<div id="team-div-{{team_name}}">
+
+			{% for swimmer_name, swimmer_data in team_data['swimmers'].items() %}
+			
+			<div class="card my-3">
+				<div class="row">
+					<div class="col-md-8">
+						<h3>{{ swimmer_name }} - {{ swimmer_data|length }} Entries</h3>
+				</div>
+				<div class="col-md-4 text-right">
+					<button class="btn btn-primary mb-3" type="button" id="btn-toggle-table-{{ swimmer_name }}"
+					data-table-id="{{ swimmer_name }}" style="margin-top: 1rem;">
+					Toggle Table
+				</button>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	<table class="table table-striped" id="{{swimmer_name}}-table">
+		<thead>
+			<tr> <th>Name</th> <th>Event</th> <th>Time</th> <th>Ranking</th> <th>Points</th> </tr>
+		</thead>
+		<tbody>
+			{% for event in swimmer_data %}
+			<tr>
+				<td>{{ swimmer_name }}</td>
+				<td>{{ event['event_name'] }}</td>
+				<td>{{ event['seed_time'] }}</td>
+				<td>{{ event['ranking'] }}</td>
+				<td>{{ individual_points[event['ranking']] }}</td>
+			</tr>
+			{% endfor %}
+		</tbody>
+	</table>	
+	{% endfor %}
+	
+	</div>
+	{% endfor %}
+
+	</div>
+	
+	
+</body>
+
+	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='table.js') }}"></script>
+	<script src="{{ url_for('static', filename='collapsible.js') }}"></script>
+
+

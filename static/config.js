@@ -1,4 +1,4 @@
-const individual_points = {
+export const individual_points = {
     1: 20,
     2: 17,
     3: 16,
@@ -16,6 +16,3 @@ const individual_points = {
     15: 2,
     16: 1
 };
-
-exports.individual_point = individual_points;
-

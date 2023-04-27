@@ -31,8 +31,6 @@ for (let i = 0; i < moveUpButtons.length; i++) {
             tableBody.insertBefore(row, prevRow);
 			let eventId = table.id.slice(0, -6);
 			switchSwimmers(eventId, row.cells[1].textContent, prevRow.cells[1].textContent);
-			console.log(`Swimmer: ${row.cells[1].textContent}, Event: ${eventId}`);
-            console.log(`Swimmer: ${prevRow.cells[1].textContent}, Event: ${eventId}`);
 		}
     });
 }

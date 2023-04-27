@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, session, jsonify, redirect, u
 from Meet.meet import Meet
 from pypdf import PdfReader
 from pymongo import MongoClient
-from config import individual_points
+from config import individual_points, MAX_INDIVIDUAL_EVENTS
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['swimdatabase']
@@ -40,29 +40,23 @@ def home():
         for event in m.events:
             for entry in event.entries:
                 collection.insert_one(entry.__dict__)
-        # results = m.get_team_breakdown("Men")
-        # entries = db['entries'].find()
 
         return redirect(url_for('entries'))
 
     # If the request method is GET, render the home page
     return render_template('home.html')
 
-# Define the route for displaying the results
 
 @app.route('/swap_swimmers', methods=['POST'])
 def swap_swimmers():
     request_json = request.get_json()
-    event = request_json['event']
-    swimmer1 = request_json['name1']
-    swimmer2 = request_json['name2']
+    event, swimmer1, swimmer2 = request_json['event'], request_json['name1'], request_json['name2']
 
     # Find the entries for the two swimmers
     swimmer1_entry = collection.find_one({'name': swimmer1, 'event_name': event})
     swimmer2_entry = collection.find_one({'name': swimmer2, 'event_name': event})
 
     if swimmer1_entry is None or swimmer2_entry is None:
-        # Return failure
         return jsonify({'success': False, 'message': 'Swimmer or event not found'})
 
     # Swap the ranking and points values
@@ -72,7 +66,6 @@ def swap_swimmers():
                                     'ranking': swimmer1_entry['ranking'], 'points': swimmer1_entry['points']}})
 
     if result1.matched_count == 1 and result1.modified_count == 1 and result2.matched_count == 1 and result2.modified_count == 1:
-        # Return success
         return jsonify({'success': True})
     else:
         return jsonify({'success': False, 'message': 'Error updating database'})
@@ -80,8 +73,7 @@ def swap_swimmers():
 @app.route('/delete_swimmer', methods=['POST'])
 def delete_swimmer():
     request_json = request.get_json()
-    event = request_json['event']
-    swimmer = request_json['name']
+    event, swimmer = request_json['event'], request_json['name']
     
     status = collection.delete_one({'name': swimmer, 'event_name': event})
     if status.deleted_count == 1:
@@ -93,9 +85,7 @@ def delete_swimmer():
 @app.route('/update_swimmer', methods=['POST'])
 def update_swimmer():
     request_json = request.get_json()
-    event = request_json['event']
-    swimmer = request_json['name']
-    ranking = request_json['rank']
+    event, swimmer, ranking = request_json['event'], request_json['name'], request_json['rank']
     points = 0
     if ranking <= 16:
         points = individual_points[ranking]
@@ -109,10 +99,7 @@ def update_swimmer():
 
 @app.route('/results')
 def display_results():
-    # Get the results from the session
     results = session.get('results', [])
-
-    # Render the results template with the results list
     return render_template('results.html', results=results)
 
 
@@ -127,6 +114,34 @@ def points_by_team():
     points_by_team = {k: v for k, v in sorted(points_by_team.items(), key=lambda item: item[1], reverse=True)}
     
     return points_by_team
+
+@app.route('/entries_by_team')
+def entries_by_team():
+    entries = db['entries'].find()
+    ret = {}
+    for entry in entries:
+        if entry['team_name'] not in ret:
+            ret[entry['team_name']] = {'swimmers': {}, 'points': 0,
+                                    'number_of_swimmers': 0, 'over_entered_swimmers': [], 'team_name': entry['team_name']}
+        if entry['name'] not in ret[entry['team_name']]['swimmers']:
+            ret[entry['team_name']]['number_of_swimmers'] += 1
+            ret[entry['team_name']]['swimmers'][entry['name']] = list()
+
+        ret[entry['team_name']]['swimmers'][entry['name']].append(entry)
+        if len(ret[entry['team_name']]['swimmers'][entry['name']]) > MAX_INDIVIDUAL_EVENTS:
+            ret[entry['team_name']]['over_entered_swimmers'].append(entry['name'])
+
+        if entry['ranking'] < len(individual_points) + 1:
+            ret[entry['team_name']]['points'] += individual_points[entry['ranking']]
+
+    
+    return ret
+    
+@app.route('/teams')
+def teams():
+    entries_by_team_dict = entries_by_team()
+    points_by_team_dict = points_by_team()
+    return render_template('teams.html', points_by_team=points_by_team_dict, entries_by_team=entries_by_team_dict, individual_points=individual_points)
 
 @app.route('/entries')
 def entries():
