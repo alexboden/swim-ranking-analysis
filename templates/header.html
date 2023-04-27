@@ -2,7 +2,6 @@
 <html>
 
 <head>
-	<title>Points by Team</title>
 	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
 	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 	<style>
@@ -15,12 +14,29 @@
 </head>
 
 <body>
-	<div class="total-points container">
-		<h1 class="my-5">Points by Team</h1>
+	<div class="total-points container text-center">
 		<h3>Total Points by Team:</h3>
 		{% for team in points_by_team %}
 		<p class="team-points" id="team-points-{{team.split()[0]}}">{{ team }}: {{ points_by_team[team] }}</p>
 		{% endfor %}
+	</div>
+	<div class="container">
+		<div class="row-mb-3">
+			<div class="col-md-6">
+				<button class="btn btn-outline-primary btn-lg btn-block" id="btn-men">Men</button>
+			</div>
+			<div class="col-md-6">
+				<button class="btn btn-outline-primary btn-lg btn-block" id="btn-women">Women</button>
+			</div>
+		</div>
+		<div class="row-mt-3">
+			<div class="col-md-6">
+				<a href="/entries" class="btn btn-primary btn-block mt-3">Entries</a>
+			</div>
+			<div class="col-md-6">
+				<a href="/teams" class="btn btn-primary btn-block mt-3">Teams</a>
+			</div>
+		</div>
 	</div>
 
 

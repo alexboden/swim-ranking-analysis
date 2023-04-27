@@ -11,8 +11,7 @@
 
 <body>
 	<div class="container">
-	<div class="container">
-		<div class="row align-items-center">
+		<div class="row">
 			<h1 class="col-md-3 mb-0">Entries</h1>
 			<div class="col-md-6 my-3" style="margin-top: 2.5rem;">
 				<button class="btn btn-primary" type="button" id="btn-collapse-all">Collapse All</button>
@@ -22,6 +21,7 @@
 
 
 
+	<div class="container">
 
 		{% for event in events %}
 		<div class="card my-3">
@@ -29,7 +29,7 @@
 				<div class="col-md-8">
 					<h2 class="mb-0">{{ event }}</h2>
 				</div>
-				<div class="col-md-4 text-right">
+				<div class="col-md-4 text-left">
 					<button class="btn btn-primary mb-3" type="button" id="btn-toggle-table-{{ event }}"
 						data-table-id="{{ event }}"  style="margin-top: 1rem;">
 						Toggle Table
