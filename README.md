@@ -2,9 +2,16 @@
 
 
 ### To Do
+- men/women filter
+- teams page
+	- add delete swimmer functionality 
+	- add delete event functionality
+	- sort by most points
+
+- add option to export data for future use
+
 - tied entries
-- add relay points
-- add relay points to event
+- relays
 
 # MongoDB Notes
 brew services start mongodb-community

@@ -17,13 +17,13 @@ def home():
     if request.method == 'POST':
         # Check if a file was uploaded
         if 'file' not in request.files:
-            return render_template('home.html', error='No file selected.')
+            return render_template('upload.html', error='No file selected.')
 
         file_submission = request.files['file']
 
         # Check if the file is a PDF
         if file_submission.filename.split('.')[-1].lower() != 'pdf':
-            return render_template('home.html', error='File must be a PDF.')
+            return render_template('upload.html', error='File must be a PDF.')
 
         # Process the PDF 
         reader = PdfReader(file_submission.filename)
@@ -44,7 +44,7 @@ def home():
         return redirect(url_for('entries'))
 
     # If the request method is GET, render the home page
-    return render_template('home.html')
+    return render_template('upload.html')
 
 
 @app.route('/swap_swimmers', methods=['POST'])
