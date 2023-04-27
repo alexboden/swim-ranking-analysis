@@ -95,3 +95,5 @@ class Meet:
         ret = []
         for name in it:
             ret.append(name.span())
+        
+        return ret

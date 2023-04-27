@@ -2,20 +2,24 @@
 <html>
 
 <head>
-	<title>My App</title>
-	<!-- Include necessary CSS and JS files here -->
+	<title>Points by Team</title>
+	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 
 <body>
-	<header>
-		<nav>
-			<ul>
-				<li><a href="/">Home</a></li>
-				<li><a href="/results">Page 1</a></li>
-				<li><a href="/analysis">Page 2</a></li>
-			</ul>
-		</nav>
-	</header>
+	<div class="container">
+		<h1 class="my-5">Points by Team</h1>
+		<h3>Total Points by Team:</h3>
+		{% for team in points_by_team %}
+		<p id = {{team}}>{{ team }}: {{ points_by_team[team] }}</p>
+		{% endfor %}
+	</div>
+
+	<div id="point-totals">{{ total_points }}</div>
+
+	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='update_point_totals.js') }}"></script>
 </body>
 
 </html>
