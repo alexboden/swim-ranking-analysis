@@ -12,16 +12,6 @@ for (let i = 0; i < toggleButtons.length; i++) {
     });
 }
 
-// Add a click event listener to the "Collapse All" button
-// document.getElementById('btn-collapse-all').addEventListener('click', function () {
-// 	// Loop through all the tables and set their display property to "none"
-// 	for (let i = 0; i < toggleButtons.length; i++) {
-//         let tableId = toggleButtons[i].getAttribute('data-table-id');
-//         let table = document.getElementById(tableId + '-table');
-// 		table.style.display = 'none';
-// 	}
-// });
-
 
 let team_toggle_collapse_buttons = document.querySelectorAll('#btn-collapse-team');
 for (let i = 0; i < team_toggle_collapse_buttons.length; i++) {
