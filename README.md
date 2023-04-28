@@ -4,6 +4,7 @@
 ### To Do
 - men/women filter
 - teams page
+	- expand all button for teams
 	- add delete swimmer functionality 
 	- add delete event functionality
 	- sort by most points

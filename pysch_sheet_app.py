@@ -154,5 +154,9 @@ def entries():
     return render_template('broken_out_by_entry.html', events=entries_by_event, points_by_team=points_by_team_dict)
 
 
+@app.template_filter(name='first_word')
+def first_word(value):
+    return value.split()[0]
+
 if __name__ == '__main__':
-    app.run(port=3001, debug=True)
+    app.run(port=3000, debug=True)

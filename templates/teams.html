@@ -7,41 +7,58 @@
 	<title>Entries by Team</title>
 	<!-- Bootstrap CSS -->
 	<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-	<link href="{{ url_for('static', filename='css/styles.css') }}" rel="stylesheet">
 </head>
 
 <body>
 	<div class="container mt-5">
 		<h1>Entries by Team</h1>
-
-		<button class="btn btn-primary" type="button" id="btn-collapse-all">Collapse All</button>
+		
+		<button class="btn btn-primary" type="button" id="btn-collapse-all-team">Collapse All</button>
 
 		{% for team_name, team_data in entries_by_team.items() %}
 		<div class="card mt-4">
 			<div class="card-header">
-				<h1>Team: {{ team_name }}</h1>
+				<div class="container">
+					<div class="row">
+						<div class="col-md-3">
+							<h3>Team: {{ team_name }}</h3>
+						</div>
+						<div class="col-md-3">
+							<h3> Points: {{ team_data['points'] }}</h3>
+						</div>
+						<div class="col-md-2">
+							<h3>Swimmers: {{ team_data['number_of_swimmers'] }}</h3>
+						</div>
+						<div class="col-md-2">
+							<button class="btn btn-primary btn-block" id="btn-collapse-team" team-id={{team_name.split()[0]}} 
+							style="margin-top: 1.5rem;" >Collapse</button>
+						</div>
+						<div class="col-md-2">
+							<button class="btn btn-primary btn-block" id="btn-expand-team" team-id={{team_name.split()[0]}} 
+							style="margin-top: 1.5rem;">Expand</button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 
 	<div class="card-body">
-		<h2 class="card-text">Total Points: {{ team_data['points'] }}</h2>
-		<h2 class="card-text">Number of Swimmers: {{ team_data['number_of_swimmers'] }}</h2>
-		<button class="btn btn-primary" id="btn-collapse-team" team-id={{team_name}}>Collapse All</button>
-		<div id="team-div-{{team_name}}">
-
+		
+		<div id="team-div-{{team_name.split()[0]}}">
+			
 			{% for swimmer_name, swimmer_data in team_data['swimmers'].items() %}
 			
 			<div class="card my-3">
 				<div class="row">
 					<div class="col-md-8">
-						<h3>{{ swimmer_name }} - {{ swimmer_data|length }} Entries</h3>
-				</div>
+						<h4>{{ swimmer_name }} - {{ swimmer_data|length }} Entries</h4>
+					</div>
+				
 				<div class="col-md-4 text-right">
 					<button class="btn btn-primary mb-3" type="button" id="btn-toggle-table-{{ swimmer_name }}"
 					data-table-id="{{ swimmer_name }}" style="margin-top: 1rem;">
-					Toggle Table
-				</button>
-			</div>
+					Toggle</button>
+				</div>
 		</div>
 	</div>
 	
