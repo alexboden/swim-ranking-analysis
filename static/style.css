@@ -12,3 +12,8 @@
 .container {
   margin-top: 20px;
 }
+
+.current-page {
+    background-color: #9500ff;
+    color: #000000;
+}

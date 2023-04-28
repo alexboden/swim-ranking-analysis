@@ -8,6 +8,9 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['swimdatabase']
 collection = db['entries']
 
+user_preferences = db['user_preferences']
+user_preferences.insert_one({'gender': 'Men'})
+
 
 app = Flask(__name__)
 app.debug = True
@@ -46,6 +49,13 @@ def home():
     # If the request method is GET, render the home page
     return render_template('upload.html')
 
+def get_filtered_entries():
+    current_gender = user_preferences.find_one('gender')['gender']
+    
+    entries = collection.find()
+    filtered_entries = []
+    for entry in entries:
+        if entry.
 
 @app.route('/swap_swimmers', methods=['POST'])
 def swap_swimmers():
@@ -153,10 +163,6 @@ def entries():
     points_by_team_dict = points_by_team()
     return render_template('broken_out_by_entry.html', events=entries_by_event, points_by_team=points_by_team_dict)
 
-
-@app.template_filter(name='first_word')
-def first_word(value):
-    return value.split()[0]
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)
