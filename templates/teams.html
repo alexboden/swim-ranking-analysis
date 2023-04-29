@@ -54,11 +54,20 @@
 		<div id="team-div-{{team_name.split()[0]}}">
 			
 			{% for swimmer_name, swimmer_data in team_data['swimmers'].items() %}
-			
+
+			<!-- calculate swimmer points -->
+			{% set swimmer_points = 0 %}
+			{% for entry in swimmer_data %}
+				{% if entry['ranking'] in individual_points.keys() %}
+					<!-- {% set swimmer_points = swimmer_points + individual_points[entry['ranking']] %}  -->
+					{% set swimmer_points = swimmer_points + 1 %}
+				{% endif %}
+			{% endfor %}
+
 			<div class="card my-3">
 				<div class="row">
 					<div class="col-md-8">
-						<h4>{{ swimmer_name }} - {{ swimmer_data|length }} Entries</h4>
+						<h4>{{ swimmer_name }} - {{ swimmer_data|length }} Entries - ({{ swimmer_points }} Points)</h4>
 					</div>
 				
 				<div class="col-md-4 text-right">
@@ -82,7 +91,7 @@
 				<td>{{ event['event_name'] }}</td>
 				<td>{{ event['seed_time'] }}</td>
 				<td>{{ event['ranking'] }}</td>
-				<td>{{ individual_points[event['ranking']] }}</td>
+				<td>{{ individual_points.get(event['ranking'], 0) }}</td>
 			</tr>
 			{% endfor %}
 		</tbody>

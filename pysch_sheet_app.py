@@ -49,13 +49,20 @@ def home():
     # If the request method is GET, render the home page
     return render_template('upload.html')
 
+
 def get_filtered_entries():
-    current_gender = user_preferences.find_one('gender')['gender']
-    
+    current_gender = user_preferences.find_one()['gender']
+
     entries = collection.find()
     filtered_entries = []
+
     for entry in entries:
-        if entry.
+        if "Women" in entry['event_name'] and current_gender == "Women":
+            filtered_entries.append(entry)
+        if not "Women" in entry['event_name'] and current_gender == "Men":
+            filtered_entries.append(entry)
+
+    return filtered_entries
 
 @app.route('/swap_swimmers', methods=['POST'])
 def swap_swimmers():
@@ -115,7 +122,7 @@ def display_results():
 
 @app.route('/points_by_team')
 def points_by_team():
-    entries = db['entries'].find()
+    entries = get_filtered_entries()
     points_by_team = {} 
     for entry in entries:
         points_by_team[entry['team_name']] = points_by_team.get(entry['team_name'], 0) + entry['points'] 
@@ -127,7 +134,7 @@ def points_by_team():
 
 @app.route('/entries_by_team')
 def entries_by_team():
-    entries = db['entries'].find()
+    entries = get_filtered_entries()
     ret = {}
     for entry in entries:
         if entry['team_name'] not in ret:
@@ -138,13 +145,17 @@ def entries_by_team():
             ret[entry['team_name']]['swimmers'][entry['name']] = list()
 
         ret[entry['team_name']]['swimmers'][entry['name']].append(entry)
+        
         if len(ret[entry['team_name']]['swimmers'][entry['name']]) > MAX_INDIVIDUAL_EVENTS:
             ret[entry['team_name']]['over_entered_swimmers'].append(entry['name'])
 
         if entry['ranking'] < len(individual_points) + 1:
             ret[entry['team_name']]['points'] += individual_points[entry['ranking']]
 
-    
+    # sort by total points
+    ret = {k: v for k, v in sorted(ret.items(), key=lambda item: item[1]['points'], reverse=True)} 
+    # sort each team's swimmers by their total points
+    ret = {k: {'swimmers': {k2: v2 for k2, v2 in sorted(v['swimmers'].items(), key=lambda item: sum([x['points'] for x in item[1]]), reverse=True)}, 'points': v['points'], 'number_of_swimmers': v['number_of_swimmers'], 'over_entered_swimmers': v['over_entered_swimmers'], 'team_name': v['team_name']} for k, v in ret.items()}
     return ret
     
 @app.route('/teams')
@@ -155,7 +166,7 @@ def teams():
 
 @app.route('/entries')
 def entries():
-    entries = db['entries'].find()
+    entries = get_filtered_entries()
     entries_by_event = {}
     for entry in entries:
         entries_by_event[entry['event_name']] = entries_by_event.get(entry['event_name'], []) + [entry]

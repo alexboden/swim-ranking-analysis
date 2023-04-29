@@ -6,27 +6,24 @@ client = MongoClient('mongodb://localhost:27017/')
 db = client['swimdatabase']
 collection = db['entries']
 
+user_preferences = db['user_preferences']
+user_preferences.insert_one({'gender': 'Men'})
 
-def entries_by_team():
-    entries = db['entries'].find()
-    ret = {}
+def get_filtered_entries():
+    current_gender = user_preferences.find_one()['gender']
+
+    entries = collection.find()
+    filtered_entries = []
+
     for entry in entries:
-        if entry['team_name'] not in ret:
-            ret[entry['team_name']] = {'swimmers': {}, 'points': 0,
-                                       'number_of_swimmers': 0, 'over_entered_swimmers': [], 'team_name': entry['team_name']}
-        if entry['name'] not in ret[entry['team_name']]['swimmers']:
-            ret[entry['team_name']]['number_of_swimmers'] += 1
-            ret[entry['team_name']]['swimmers'][entry['name']] = []
-            
-        ret[entry['team_name']]['swimmers'][entry['name']].append(entry)
-        if len(ret[entry['team_name']]['swimmers'][entry['name']]) > MAX_INDIVIDUAL_EVENTS:
-            print(entry['name'])
-            ret[entry['team_name']]['over_entered_swimmers'].append(entry['name'])
+        print('entry: ', entry)
+        if "Women" in entry['event_name'] and current_gender == "Women":
+            filtered_entries.append(entry)
+        if not "Women" in entry['event_name'] and current_gender == "Men":
+            filtered_entries.append(entry)
 
-        if entry['ranking'] < len(individual_points) + 1:
-            ret[entry['team_name']]['points'] += individual_points[entry['ranking']]
+    return filtered_entries
 
-    return ret
 
-test = entries_by_team()
+test = get_filtered_entries()
 pprint.pprint(test)

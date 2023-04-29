@@ -25,15 +25,13 @@
 		<div class="row mt-3">
 			<div class="col-md-6">
 				<a href="/entries"
-					class="btn btn-block mt-3 btn-lg btn-outline-primary {% if request.path == '/entries' %}btn-primary{% else %}btn-info{% endif %}">Entries
-					by
-					Event Page</a>
+					class="btn btn-block mt-3 btn-lg btn-outline-primary btn-info {% if request.path == '/entries' %}disabled{% endif %}">
+					Entries by Event Page</a>
 			</div>
 			<div class="col-md-6">
 				<a href="/teams"
-					class="btn btn-block mt-3 btn-lg btn-outline-primary {% if request.path == '/teams' %}btn-primary{% else %}btn-info{% endif %}">Entries
-					by
-					Teams Page</a>
+					class="btn btn-block mt-3 btn-lg btn-outline-primary btn-info {% if request.path == '/teams' %}disabled{% endif %}">
+					Entries by Teams Page</a>
 			</div>
 		</div>
 	</div>
