@@ -10,14 +10,16 @@
 
 
 ### To Do
-- teams page
+
+- By Team Page
 	- add delete swimmer functionality 
 	- add delete event functionality
 
-- add option to export data for future use
+- Add option to export data for future use
 
 - tied entries
 - relays
+- Integrate past meet data extraction
 
 # MongoDB Notes
 brew services start mongodb-community
