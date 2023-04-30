@@ -1,5 +1,5 @@
-let tableBody = document.querySelector('table tbody');
-let table = document.querySelector('table');
+// let tableBody = document.querySelector('table tbody');
+// let table = document.querySelector('table');
 
 const individual_points = {
     1: 20,
@@ -27,11 +27,13 @@ for (let i = 0; i < moveUpButtons.length; i++) {
         let row = this.parentNode.parentNode;
         if (row.previousElementSibling) {
             let prevRow = row.previousElementSibling;
+            let tableBody = row.parentNode;
             swapValues(row, prevRow);
             tableBody.insertBefore(row, prevRow);
-			let eventId = table.id.slice(0, -6);
-			switchSwimmers(eventId, row.cells[1].textContent, prevRow.cells[1].textContent);
-		}
+            let table = this.closest('table');
+            let eventId = table.id.slice(0, -6);
+            switchSwimmers(eventId, row.cells[1].textContent, prevRow.cells[1].textContent);
+        }
     });
 }
 
@@ -42,13 +44,16 @@ for (let i = 0; i < moveDownButtons.length; i++) {
         let row = this.parentNode.parentNode;
         if (row.nextElementSibling) {
             let nextRow = row.nextElementSibling;
+            let tableBody = row.parentNode;
             swapValues(row, nextRow);
             tableBody.insertBefore(nextRow, row);
-			let eventId = table.id.slice(0, -6);
-			switchSwimmers(eventId, nextRow.cells[1].textContent, row.cells[1].textContent);
+            let table = this.closest('table');
+            let eventId = table.id.slice(0, -6);
+            switchSwimmers(eventId, nextRow.cells[1].textContent, row.cells[1].textContent);
         }
     });
 }
+
 
 // Function to swap ranking and points values between two rows
 function swapValues(row1, row2) {
@@ -62,37 +67,43 @@ function swapValues(row1, row2) {
 
 // Delete row
 let deleteButtons = document.querySelectorAll('.btn-delete');
-for (let i = 0; i < deleteButtons.length; i++) {
-    deleteButtons[i].addEventListener('click', function () {
-        let row = this.parentNode.parentNode;
-        let tableBody = row.parentNode;
-        let eventId = table.id.slice(0, -6);
-        let swimmerName = row.cells[1].textContent;
-        row.parentNode.removeChild(row);
 
-        // Update ranking and points for remaining rows
-        let rows = tableBody.rows;
-        for (let j = 0; j < rows.length; j++) {
-            let currentRank = j + 1;
-			let currentPoints = 0;
+// Add event listener to each delete button
+deleteButtons.forEach(function (button) {
+  button.addEventListener('click', function () {
+    let row = this.parentNode.parentNode;
+    let tableBody = row.parentNode;
+    let table = tableBody.parentNode;
+    let eventId = table.id.slice(0, -6);
+    let swimmerName = row.cells[1].textContent;
 
-            if(currentRank <= Object.keys(individual_points).length) {
-				currentPoints = individual_points[currentRank];
-			}
-			// currentPoints = 0;
-            rows[j].cells[0].textContent = currentRank;
-            rows[j].cells[4].textContent = currentPoints;
+    // Remove the row from the table
+    row.remove();
 
-            // Update database with new ranking and points
-            let swimmerName = rows[j].cells[1].textContent;
-			console.log(`currentPoints: ${currentPoints}, currentRank: ${currentRank}, swimmerName: ${swimmerName}, eventId: ${eventId}`)
-            updateSwimmerEvent(eventId, swimmerName, currentRank, currentPoints);
-        }
+    // Update ranking and points for remaining rows
+    let rows = tableBody.rows;
+    for (let i = 0; i < rows.length; i++) {
+      let currentRank = i + 1;
+      let currentPoints = 0;
 
-        // Delete swimmer from database
-        deleteSwimmerEvent(eventId, swimmerName);
-    });
-}
+      if (currentRank <= Object.keys(individual_points).length) {
+        currentPoints = individual_points[currentRank];
+      }
+
+      // Update the rank and points cells in the row
+      rows[i].cells[0].textContent = currentRank;
+      rows[i].cells[4].textContent = currentPoints;
+
+      // Update database with new ranking and points
+      let swimmerName = rows[i].cells[1].textContent;
+      updateSwimmerEvent(eventId, swimmerName, currentRank, currentPoints);
+    }
+
+    // Delete swimmer from database
+    deleteSwimmerEvent(eventId, swimmerName);
+  });
+});
+
 
 
 // Makes API call to switch swimmers

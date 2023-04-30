@@ -11,4 +11,4 @@ function updatePointTotals() {
 }
 
 // Update the point totals every 10 seconds
-setInterval(updatePointTotals, 10000);
+// setInterval(updatePointTotals, 10000);

@@ -5,6 +5,8 @@
 def entries_by_team():
 add total points
 
+- move up isnt working sometimes
+
 - men/women filter
 - teams page
 	- expand all button for teams

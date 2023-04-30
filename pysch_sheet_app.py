@@ -9,6 +9,7 @@ db = client['swimdatabase']
 collection = db['entries']
 
 user_preferences = db['user_preferences']
+user_preferences.delete_many({})
 user_preferences.insert_one({'gender': 'Men'})
 
 

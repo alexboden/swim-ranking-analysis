@@ -58,10 +58,7 @@
 			<!-- calculate swimmer points -->
 			{% set swimmer_points = 0 %}
 			{% for entry in swimmer_data %}
-				{% if entry['ranking'] in individual_points.keys() %}
-					<!-- {% set swimmer_points = swimmer_points + individual_points[entry['ranking']] %}  -->
-					{% set swimmer_points = swimmer_points + 1 %}
-				{% endif %}
+				{% set swimmer_points = swimmer_points + individual_points.get(entry['ranking'], 0) %} 
 			{% endfor %}
 
 			<div class="card my-3">
