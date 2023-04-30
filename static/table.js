@@ -1,5 +1,12 @@
-// let tableBody = document.querySelector('table tbody');
-// let table = document.querySelector('table');
+function updatePointTotals() {
+  fetch('/points_by_team')
+    .then(response => response.json())
+    .then(data => {
+		for (key in data) {
+			document.querySelector(`#team-points-${key.split(" ")[0]}`).innerHTML = `${key}: ${data[key]}`;
+		}
+      });
+}
 
 const individual_points = {
     1: 20,
@@ -34,6 +41,7 @@ for (let i = 0; i < moveUpButtons.length; i++) {
             let eventId = table.id.slice(0, -6);
             switchSwimmers(eventId, row.cells[1].textContent, prevRow.cells[1].textContent);
         }
+		updatePointTotals();	
     });
 }
 
@@ -51,6 +59,7 @@ for (let i = 0; i < moveDownButtons.length; i++) {
             let eventId = table.id.slice(0, -6);
             switchSwimmers(eventId, nextRow.cells[1].textContent, row.cells[1].textContent);
         }
+		updatePointTotals();
     });
 }
 
@@ -101,6 +110,8 @@ deleteButtons.forEach(function (button) {
 
     // Delete swimmer from database
     deleteSwimmerEvent(eventId, swimmerName);
+
+	updatePointTotals();
   });
 });
 

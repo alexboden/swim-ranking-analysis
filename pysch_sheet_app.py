@@ -180,7 +180,7 @@ def entries():
         entries_by_event[entry['event_name']] = entries_by_event.get(entry['event_name'], []) + [entry]
     gender = user_preferences.find_one()['gender']
     points_by_team_dict = points_by_team()
-    return render_template('broken_out_by_entry.html', events=entries_by_event, points_by_team=points_by_team_dict, gender=gender)
+    return render_template('entries.html', events=entries_by_event, points_by_team=points_by_team_dict, gender=gender)
 
 
 @app.route('/update_gender', methods=['POST'])

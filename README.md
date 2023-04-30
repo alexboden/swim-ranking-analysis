@@ -1,18 +1,18 @@
 # pysch-sheet-analysis
 
+## Description
+
+## Technologies Used
+- Flask (API)
+- MongoDB (Database)
+- Python (Backend)
+- JavaScript/HTML/CSS/Bootstrap (Frontend)
+
 
 ### To Do
-def entries_by_team():
-add total points
-
-- move up isnt working sometimes
-
-- men/women filter
 - teams page
-	- expand all button for teams
 	- add delete swimmer functionality 
 	- add delete event functionality
-	- sort by most points
 
 - add option to export data for future use
 
