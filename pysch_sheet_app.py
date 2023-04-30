@@ -143,27 +143,34 @@ def entries_by_team():
                                     'number_of_swimmers': 0, 'over_entered_swimmers': [], 'team_name': entry['team_name']}
         if entry['name'] not in ret[entry['team_name']]['swimmers']:
             ret[entry['team_name']]['number_of_swimmers'] += 1
-            ret[entry['team_name']]['swimmers'][entry['name']] = list()
+            ret[entry['team_name']]['swimmers'][entry['name']] = {'entries' : [], 'points': 0}
 
-        ret[entry['team_name']]['swimmers'][entry['name']].append(entry)
+        ret[entry['team_name']]['swimmers'][entry['name']]['entries'].append(entry)
+        ret[entry['team_name']]['swimmers'][entry['name']]['points'] += individual_points.get(entry['ranking'], 0)
+        
         
         if len(ret[entry['team_name']]['swimmers'][entry['name']]) > MAX_INDIVIDUAL_EVENTS:
             ret[entry['team_name']]['over_entered_swimmers'].append(entry['name'])
 
-        if entry['ranking'] < len(individual_points) + 1:
-            ret[entry['team_name']]['points'] += individual_points[entry['ranking']]
+        ret[entry['team_name']]['points'] += individual_points.get(entry['ranking'], 0)
 
     # sort by total points
     ret = {k: v for k, v in sorted(ret.items(), key=lambda item: item[1]['points'], reverse=True)} 
-    # sort each team's swimmers by their total points
-    ret = {k: {'swimmers': {k2: v2 for k2, v2 in sorted(v['swimmers'].items(), key=lambda item: sum([x['points'] for x in item[1]]), reverse=True)}, 'points': v['points'], 'number_of_swimmers': v['number_of_swimmers'], 'over_entered_swimmers': v['over_entered_swimmers'], 'team_name': v['team_name']} for k, v in ret.items()}
+    # sort each team's swimmers by their total points ie the value of the 'points' key
+    for team_name, team_data in ret.items():
+        swimmers = team_data['swimmers']
+        sorted_swimmers = sorted(
+            swimmers.items(), key=lambda item: item[1]['points'], reverse=True)
+        ret[team_name]['swimmers'] = dict(sorted_swimmers)
+        
     return ret
     
 @app.route('/teams')
 def teams():
     entries_by_team_dict = entries_by_team()
     points_by_team_dict = points_by_team()
-    return render_template('teams.html', points_by_team=points_by_team_dict, entries_by_team=entries_by_team_dict, individual_points=individual_points)
+    gender = user_preferences.find_one()['gender']
+    return render_template('teams.html', points_by_team=points_by_team_dict, entries_by_team=entries_by_team_dict, individual_points=individual_points, gender = gender)
 
 @app.route('/entries')
 def entries():
@@ -171,10 +178,22 @@ def entries():
     entries_by_event = {}
     for entry in entries:
         entries_by_event[entry['event_name']] = entries_by_event.get(entry['event_name'], []) + [entry]
-    
+    gender = user_preferences.find_one()['gender']
     points_by_team_dict = points_by_team()
-    return render_template('broken_out_by_entry.html', events=entries_by_event, points_by_team=points_by_team_dict)
+    return render_template('broken_out_by_entry.html', events=entries_by_event, points_by_team=points_by_team_dict, gender=gender)
 
 
+@app.route('/update_gender', methods=['POST'])
+def update_gender():
+    request_json = request.get_json()
+    gender = request_json['gender']
+    
+    status = user_preferences.update_one({}, {'$set': {'gender': gender}})
+    
+    if status is not None:
+        return jsonify({'success': True})
+    else:
+        return jsonify({'success': False, 'message': 'Error updating swimmer'})
+    
 if __name__ == '__main__':
     app.run(port=3000, debug=True)

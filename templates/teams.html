@@ -64,7 +64,7 @@
 			<div class="card my-3">
 				<div class="row">
 					<div class="col-md-8">
-						<h4>{{ swimmer_name }} - {{ swimmer_data|length }} Entries - ({{ swimmer_points }} Points)</h4>
+						<h4>{{ swimmer_name }} - {{ swimmer_data['entries']|length }} Entries - ({{ swimmer_data['points'] }} Points)</h4>
 					</div>
 				
 				<div class="col-md-4 text-right">
@@ -82,7 +82,7 @@
 			<tr> <th>Name</th> <th>Event</th> <th>Time</th> <th>Ranking</th> <th>Points</th> </tr>
 		</thead>
 		<tbody>
-			{% for event in swimmer_data %}
+			{% for event in swimmer_data['entries'] %}
 			<tr>
 				<td>{{ swimmer_name }}</td>
 				<td>{{ event['event_name'] }}</td>
