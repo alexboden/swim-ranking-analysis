@@ -88,16 +88,49 @@ def swap_swimmers():
     else:
         return jsonify({'success': False, 'message': 'Error updating database'})
 
+
 @app.route('/delete_swimmer', methods=['POST'])
 def delete_swimmer():
     request_json = request.get_json()
     event, swimmer = request_json['event'], request_json['name']
-    
+
+    # Get all swimmers in the event
+    event_data = collection.find({'event_name': event}).sort('points', -1)
+
+    # Determine the current rank and points of the swimmer to be deleted
+    swimmer_data = collection.find_one({'name': swimmer, 'event_name': event})
+    current_rank = swimmer_data['ranking']
+    current_points = swimmer_data['points']
+
+    # Delete the swimmer
     status = collection.delete_one({'name': swimmer, 'event_name': event})
     if status.deleted_count == 1:
+        # Update the rankings and points of the remaining swimmers
+        for i, swimmer in enumerate(event_data):
+            if swimmer['ranking'] > current_rank:
+                # Update the rank of the swimmer
+                new_rank = swimmer['ranking'] - 1
+                collection.update_one({'name': swimmer['name'], 'event_name': event}, {
+                                      '$set': {'ranking': new_rank}})
+
+                # Update the points of the swimmer
+                new_points = individual_points.get(new_rank, 0)
+                collection.update_one({'name': swimmer['name'], 'event_name': event}, {
+                                      '$set': {'points': new_points}})
+
+            elif swimmer['ranking'] == current_rank:
+                # Delete the rank and points of the deleted swimmer
+                collection.update_one({'name': swimmer['name'], 'event_name': event}, {
+                                      '$unset': {'ranking': '', 'points': ''}})
+
+            else:
+                break  # Stop updating swimmers once the deleted swimmer's rank is reached
+
         return jsonify({'success': True})
+
     else:
         return jsonify({'success': False, 'message': 'Error deleting swimmer'})
+
 
 
 @app.route('/update_swimmer', methods=['POST'])

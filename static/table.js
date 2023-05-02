@@ -2,7 +2,7 @@ function updatePointTotals() {
   fetch('/points_by_team')
     .then(response => response.json())
     .then(data => {
-		for (key in data) {
+		for (let key in data) {
 			document.querySelector(`#team-points-${key.split(" ")[0]}`).innerHTML = `${key}: ${data[key]}`;
 		}
       });

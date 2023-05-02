@@ -3,7 +3,7 @@ let toggleButtons = document.querySelectorAll('[data-table-id]');
 for (let i = 0; i < toggleButtons.length; i++) {
     toggleButtons[i].addEventListener('click', function() {
         let tableId = toggleButtons[i].getAttribute('data-table-id');
-        let table = document.getElementById(tableId + '-table');
+        let table = document.getElementById(tableId.replace(' ', '') + '-table');
         if (table.style.display === 'none') {
             table.style.display = 'table';
         } else {
