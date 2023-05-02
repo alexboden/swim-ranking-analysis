@@ -9,12 +9,16 @@ A website that allows users to upload a PDF for a swim ranking sheet and change 
 
 ## Demo video
 
+https://user-images.githubusercontent.com/43760105/235479394-f62cce52-17b0-4787-8657-eac5ff253ffa.mov
+
+
 
 ### Requirements
 1. Local MongoDB Server
 2. python packages in the `requirements.txt`
 
-### How to run
+### How to
+ run
 `python main.py`
 
 ## To Do
