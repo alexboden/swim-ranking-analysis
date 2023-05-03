@@ -17,37 +17,42 @@
 					<h1>Entries by Team</h1>
 				</div>
 				<div class="col-md-6">
-					<button class="btn btn-lg btn-primary" type="button" id="btn-collapse-all-team" style="margin-top: 1.5rem;">Collapse All</button>
+					<button class="btn btn-lg btn-primary" type="button" id="btn-collapse-all-team" style="margin-top: 1.5rem;">Collapse All Teams</button>
 				</div>
 			</div>
 		</div>
 
 		{% for team_name, team_data in entries_by_team.items() %}
-		<div class="card mt-4">
-			<div class="card-header">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-3">
-							<h3>Team: {{ team_name }}</h3>
-						</div>
-						<div class="col-md-3">
-							<h3> Points: {{ team_data['points'] }}</h3>
-						</div>
-						<div class="col-md-2">
-							<h3>Swimmers: {{ team_data['number_of_swimmers'] }}</h3>
-						</div>
-						<div class="col-md-2">
-							<button class="btn btn-primary btn-block" id="btn-collapse-team" team-id={{team_name.split()[0]}} 
-							style="margin-top: 1.5rem;" >Collapse</button>
-						</div>
-						<div class="col-md-2">
-							<button class="btn btn-primary btn-block" id="btn-expand-team" team-id={{team_name.split()[0]}} 
-							style="margin-top: 1.5rem;">Expand</button>
-						</div>
-					</div>
-				</div>
+    <div class="card-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h1>Team: {{ team_name }}</h1>
+                </div>
+                <div class="col-md-4">
+                    <h2>Points: {{ team_data['points'] }}</h2>
+                </div>
+                <div class="col-md-4">
+                    <h2>Swimmers: {{ team_data['number_of_swimmers'] }}</h2>
+                </div>
 			</div>
-		</div>
+			<div class="row">
+                <div class="col-md-3">
+                    <button class="btn btn-block btn-primary" id="btn-collapse-team" team-id={{team_name.split()[0]}} style="margin-top: 1.5rem;">Collapse Team</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-block btn-primary" id="btn-expand-team" team-id={{team_name.split()[0]}} style="margin-top: 1.5rem;">Expand Team</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-block btn-primary" id="btn-collapse-entries-team" team-id={{team_name.split()[0]}} style="margin-top: 1.5rem;">Collapse Entries</button>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-block btn-primary" id="btn-expand-entries-team" team-id={{team_name.split()[0]}} style="margin-top: 1.5rem;">Expand Entries</button>
+                </div>
+            </div>
+        </div>
+
+
 
 	<div class="card-body">
 		
@@ -64,7 +69,8 @@
 			<div class="card my-3">
 				<div class="row">
 					<div class="col-md-8">
-						<h4 id = "{{swimmer_name.replace(' ', '')}}-header">{{ swimmer_name }} - {{ swimmer_data['entries']|length }} Entries - {{ swimmer_data['points'] }} Points</h4>
+						<h4 id = "{{swimmer_name.replace(' ', '')}}-header" >
+							{{ swimmer_name }} - {{ swimmer_data['entries']|length }} Entries - {{ swimmer_data['points'] }} Points</h4>
 					</div>
 				
 				<div class="col-md-4 text-right">
@@ -77,7 +83,7 @@
 	
 	
 	
-	<table class="table table-striped" id="{{swimmer_name.replace(' ', '')}}-table">
+	<table class="table table-striped" id="{{swimmer_name.replace(' ', '')}}-table" table_team_id = "{{team_name.split()[0]}}">
 		<thead>
 			<tr> <th>Name</th> <th>Event</th> <th>Time</th> <th>Ranking</th> <th>Points</th>  <th>Delete</th></tr>
 		</thead>
