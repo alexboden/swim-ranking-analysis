@@ -117,12 +117,6 @@ def delete_swimmer():
                 new_points = individual_points.get(new_rank, 0)
                 collection.update_one({'name': swimmer['name'], 'event_name': event}, {
                                       '$set': {'points': new_points}})
-
-            elif swimmer['ranking'] == current_rank:
-                # Delete the rank and points of the deleted swimmer
-                collection.update_one({'name': swimmer['name'], 'event_name': event}, {
-                                      '$unset': {'ranking': '', 'points': ''}})
-
             else:
                 break  # Stop updating swimmers once the deleted swimmer's rank is reached
 
@@ -179,6 +173,8 @@ def entries_by_team():
             ret[entry['team_name']]['swimmers'][entry['name']] = {'entries' : [], 'points': 0}
 
         ret[entry['team_name']]['swimmers'][entry['name']]['entries'].append(entry)
+        if 'ranking' not in entry:
+            print(entry)
         ret[entry['team_name']]['swimmers'][entry['name']]['points'] += individual_points.get(entry['ranking'], 0)
         
         
