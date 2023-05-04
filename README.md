@@ -1,4 +1,4 @@
-# pysch-sheet-analysis
+# swim-ranking-analysis
 A website that allows users to upload a PDF for a swim ranking sheet and change rankings to analyze the effect on final scores.
 
 ## Technologies Used
