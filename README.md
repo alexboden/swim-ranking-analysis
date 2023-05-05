@@ -17,7 +17,7 @@ https://user-images.githubusercontent.com/43760105/235479394-f62cce52-17b0-4787-
 1. Local MongoDB Server
 2. python packages in the `requirements.txt`
 
-### How to
+### How to Run
  run
 `python main.py`
 
