@@ -1,4 +1,4 @@
-# swim-ranking-analysis
+# Swim Ranking Analysis
 A website that allows users to upload a PDF for a swim ranking sheet and change rankings to analyze the effect on final scores.
 
 ## Technologies Used
