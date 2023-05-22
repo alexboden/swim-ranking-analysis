@@ -68,7 +68,7 @@ deleteButtons.forEach(button => {
 	console.log('eventPoints: ' + eventPoints);
 
 	swimmerDiv.textContent = `${swimmerName} - ${numberOfEntries} Entries - ${points - eventPoints} Points`
-    // update the point totals
-    updatePointTotals();
+	//wait 1 second before updating the point totals
+	setTimeout(updatePointTotals, 1000);
   });
 });

@@ -93,7 +93,7 @@ def swap_swimmers():
 def delete_swimmer():
     request_json = request.get_json()
     event, swimmer = request_json['event'], request_json['name']
-
+    print(event, swimmer)
     # Get all swimmers in the event
     event_data = collection.find({'event_name': event}).sort('points', -1)
 
@@ -112,7 +112,6 @@ def delete_swimmer():
                 new_rank = swimmer['ranking'] - 1
                 collection.update_one({'name': swimmer['name'], 'event_name': event}, {
                                       '$set': {'ranking': new_rank}})
-
                 # Update the points of the swimmer
                 new_points = individual_points.get(new_rank, 0)
                 collection.update_one({'name': swimmer['name'], 'event_name': event}, {
