@@ -21,7 +21,7 @@ https://user-images.githubusercontent.com/43760105/235479394-f62cce52-17b0-4787-
  run
 `python main.py`
 
-## To Do
+## Working On
 - By Team Page
 	- add delete swimmer functionality 
 	- add delete event functionality
