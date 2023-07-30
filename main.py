@@ -29,25 +29,34 @@ def home():
 
         file_submission = request.files['file']
 
-        # Check if the file is a PDF
-        if file_submission.filename.split('.')[-1].lower() != 'pdf':
-            return render_template('upload.html', error='File must be a PDF.')
+        # Check the file type
+        file_type = file_submission.filename.split('.')[-1].lower()
 
-        # Process the PDF
-        reader = PdfReader(file_submission)
-        text_extract = ""
+        if file_type == 'pdf':
+            # Process the PDF
+            reader = PdfReader(file_submission)
+            text_extract = ""
 
-        for i in range(len(reader.pages)):
-            text_extract += (reader.pages[i].extract_text())
+            for i in range(len(reader.pages)):
+                text_extract += (reader.pages[i].extract_text())
 
-        m = Meet(text_extract)
+            m = Meet(text_extract)
 
-        # Clear the database
-        collection.delete_many({})
+            # Clear the database
+            collection.delete_many({})
 
-        for event in m.events:
-            for entry in event.entries:
-                collection.insert_one(entry.__dict__)
+            for event in m.events:
+                for entry in event.entries:
+                    collection.insert_one(entry.__dict__)
+
+        elif file_type == 'csv':
+            # Process the CSV
+            df = pd.read_csv(file_submission)
+            records = df.to_dict(orient='records')
+            collection.insert_many(records)
+
+        else:
+            return render_template('upload.html', error='File must be a PDF or CSV.')
 
         return redirect(url_for('entries'))
 
