@@ -64,6 +64,30 @@ def home():
     return render_template('upload.html')
 
 
+@app.route('/add_entry', methods=['POST'])
+def add_entry():
+    request_json = request.get_json()
+    event_name = request_json['event_name']
+    name = request_json['name']
+    seed_time = request_json['seed_time']
+    team_name = request_json['team_name']
+    points = request_json['points']
+    ranking = request_json['ranking']
+
+    entry = {
+        'event_name': event_name,
+        'name': name,
+        'seed_time': seed_time,
+        'team_name': team_name,
+        'points': points,
+        'ranking': ranking
+    }
+
+    collection.insert_one(entry)
+
+    return jsonify({'success': True})
+
+
 def get_filtered_entries():
     current_gender = user_preferences.find_one()['gender']
 
