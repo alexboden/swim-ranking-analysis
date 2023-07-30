@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, session, jsonify, redirect, url_for 
+from flask import Flask, render_template, request, session, jsonify, redirect, url_for, send_file
 from Meet.meet import Meet
 from pypdf import PdfReader
 from pymongo import MongoClient
 from config import individual_points, MAX_INDIVIDUAL_EVENTS
+import pandas as pd
+import csv
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['swimdatabase']
@@ -223,5 +225,25 @@ def update_gender():
     else:
         return jsonify({'success': False, 'message': 'Error updating swimmer'})
     
+@app.route('/export', methods=['GET'])
+def export():
+    cursor = collection.find()
+    df = pd.DataFrame(list(cursor))
+    df.to_csv('export.csv', index=False)
+    return send_file('export.csv')
+
+@app.route('/import', methods=['POST'])
+def import():
+    if 'file' not in request.files:
+        return 'No file part'
+    file = request.files['file']
+    if file.filename == '':
+        return 'No selected file'
+    if file and file.filename.endswith('.csv'):
+        df = pd.read_csv(file)
+        records = df.to_dict(orient='records')
+        collection.insert_many(records)
+        return 'File successfully uploaded'
+
 if __name__ == '__main__':
     app.run(port=3000, debug=True)
