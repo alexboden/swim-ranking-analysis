@@ -232,15 +232,15 @@ def export():
     df.to_csv('export.csv', index=False)
     return send_file('export.csv')
 
-@app.route('/import', methods=['POST'])
-def import():
+@app.route('/import_csv', methods=['POST'])
+def import_csv():
     if 'file' not in request.files:
         return 'No file part'
-    file = request.files['file']
-    if file.filename == '':
+    f = request.files['file']
+    if f.filename == '':
         return 'No selected file'
-    if file and file.filename.endswith('.csv'):
-        df = pd.read_csv(file)
+    if f and f.filename.endswith('.csv'):
+        df = pd.read_csv(f)
         records = df.to_dict(orient='records')
         collection.insert_many(records)
         return 'File successfully uploaded'
