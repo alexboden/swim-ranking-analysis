@@ -102,16 +102,18 @@
 			{% endfor %}
 		</tbody>
 	</table>	
-	{% endfor %}
-	
-	</div>
-	{% endfor %}
+	<form>
+		<input type="hidden" name="name" value="{{ swimmer_name }}">
+		<!-- Add other input fields for the new entry -->
+	</form>
+{% endfor %}
 
-	</div>
-	
-	
-	
-	<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='teams-delete.js') }}"></script>
-	<script src="{{ url_for('static', filename='collapsible-team.js') }}"></script>
+</div>
+
+
+
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='teams-delete.js') }}"></script>
+<script src="{{ url_for('static', filename='collapsible-team.js') }}"></script>
 </body>
+</html>
