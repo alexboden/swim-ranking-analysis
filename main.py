@@ -5,6 +5,7 @@ from pymongo import MongoClient
 from config import individual_points, MAX_INDIVIDUAL_EVENTS
 import pandas as pd
 import csv
+import datetime as dt
 
 client = MongoClient('mongodb://localhost:27017/')
 db = client['swimdatabase']
@@ -17,6 +18,7 @@ user_preferences.insert_one({'gender': 'Men'})
 
 app = Flask(__name__)
 app.debug = True
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -31,7 +33,7 @@ def home():
         if file_submission.filename.split('.')[-1].lower() != 'pdf':
             return render_template('upload.html', error='File must be a PDF.')
 
-        # Process the PDF 
+        # Process the PDF
         reader = PdfReader(file_submission)
         text_extract = ""
 
@@ -39,10 +41,10 @@ def home():
             text_extract += (reader.pages[i].extract_text())
 
         m = Meet(text_extract)
-        
+
         # Clear the database
         collection.delete_many({})
-        
+
         for event in m.events:
             for entry in event.entries:
                 collection.insert_one(entry.__dict__)
@@ -67,14 +69,17 @@ def get_filtered_entries():
 
     return filtered_entries
 
+
 @app.route('/swap_swimmers', methods=['POST'])
 def swap_swimmers():
     request_json = request.get_json()
     event, swimmer1, swimmer2 = request_json['event'], request_json['name1'], request_json['name2']
 
     # Find the entries for the two swimmers
-    swimmer1_entry = collection.find_one({'name': swimmer1, 'event_name': event})
-    swimmer2_entry = collection.find_one({'name': swimmer2, 'event_name': event})
+    swimmer1_entry = collection.find_one(
+        {'name': swimmer1, 'event_name': event})
+    swimmer2_entry = collection.find_one(
+        {'name': swimmer2, 'event_name': event})
 
     if swimmer1_entry is None or swimmer2_entry is None:
         return jsonify({'success': False, 'message': 'Swimmer or event not found'})
@@ -127,7 +132,6 @@ def delete_swimmer():
         return jsonify({'success': False, 'message': 'Error deleting swimmer'})
 
 
-
 @app.route('/update_swimmer', methods=['POST'])
 def update_swimmer():
     request_json = request.get_json()
@@ -135,8 +139,9 @@ def update_swimmer():
     points = 0
     if ranking <= 16:
         points = individual_points[ranking]
-    
-    status = collection.update_one({'name': swimmer, 'event_name': event}, {'$set': {'points': points, 'ranking': ranking}})
+
+    status = collection.update_one({'name': swimmer, 'event_name': event}, {
+                                   '$set': {'points': points, 'ranking': ranking}})
     if status is not None:
         return jsonify({'success': True})
     else:
@@ -152,14 +157,17 @@ def display_results():
 @app.route('/points_by_team')
 def points_by_team():
     entries = get_filtered_entries()
-    points_by_team = {} 
+    points_by_team = {}
     for entry in entries:
-        points_by_team[entry['team_name']] = points_by_team.get(entry['team_name'], 0) + entry['points'] 
+        points_by_team[entry['team_name']] = points_by_team.get(
+            entry['team_name'], 0) + entry['points']
 
     # sort the dictionary by value
-    points_by_team = {k: v for k, v in sorted(points_by_team.items(), key=lambda item: item[1], reverse=True)}
-    
+    points_by_team = {k: v for k, v in sorted(
+        points_by_team.items(), key=lambda item: item[1], reverse=True)}
+
     return points_by_team
+
 
 @app.route('/entries_by_team')
 def entries_by_team():
@@ -168,46 +176,54 @@ def entries_by_team():
     for entry in entries:
         if entry['team_name'] not in ret:
             ret[entry['team_name']] = {'swimmers': {}, 'points': 0,
-                                    'number_of_swimmers': 0, 'over_entered_swimmers': [], 'team_name': entry['team_name']}
+                                       'number_of_swimmers': 0, 'over_entered_swimmers': [], 'team_name': entry['team_name']}
         if entry['name'] not in ret[entry['team_name']]['swimmers']:
             ret[entry['team_name']]['number_of_swimmers'] += 1
-            ret[entry['team_name']]['swimmers'][entry['name']] = {'entries' : [], 'points': 0}
+            ret[entry['team_name']]['swimmers'][entry['name']] = {
+                'entries': [], 'points': 0}
 
-        ret[entry['team_name']]['swimmers'][entry['name']]['entries'].append(entry)
+        ret[entry['team_name']]['swimmers'][entry['name']
+                                            ]['entries'].append(entry)
         if 'ranking' not in entry:
             print(entry)
-        ret[entry['team_name']]['swimmers'][entry['name']]['points'] += individual_points.get(entry['ranking'], 0)
-        
-        
-        if len(ret[entry['team_name']]['swimmers'][entry['name']]) > MAX_INDIVIDUAL_EVENTS:
-            ret[entry['team_name']]['over_entered_swimmers'].append(entry['name'])
+        ret[entry['team_name']]['swimmers'][entry['name']
+                                            ]['points'] += individual_points.get(entry['ranking'], 0)
 
-        ret[entry['team_name']]['points'] += individual_points.get(entry['ranking'], 0)
+        if len(ret[entry['team_name']]['swimmers'][entry['name']]) > MAX_INDIVIDUAL_EVENTS:
+            ret[entry['team_name']]['over_entered_swimmers'].append(
+                entry['name'])
+
+        ret[entry['team_name']
+            ]['points'] += individual_points.get(entry['ranking'], 0)
 
     # sort by total points
-    ret = {k: v for k, v in sorted(ret.items(), key=lambda item: item[1]['points'], reverse=True)} 
+    ret = {k: v for k, v in sorted(
+        ret.items(), key=lambda item: item[1]['points'], reverse=True)}
     # sort each team's swimmers by their total points ie the value of the 'points' key
     for team_name, team_data in ret.items():
         swimmers = team_data['swimmers']
         sorted_swimmers = sorted(
             swimmers.items(), key=lambda item: item[1]['points'], reverse=True)
         ret[team_name]['swimmers'] = dict(sorted_swimmers)
-        
+
     return ret
-    
+
+
 @app.route('/teams')
 def teams():
     entries_by_team_dict = entries_by_team()
     points_by_team_dict = points_by_team()
     gender = user_preferences.find_one()['gender']
-    return render_template('teams.html', points_by_team=points_by_team_dict, entries_by_team=entries_by_team_dict, individual_points=individual_points, gender = gender)
+    return render_template('teams.html', points_by_team=points_by_team_dict, entries_by_team=entries_by_team_dict, individual_points=individual_points, gender=gender)
+
 
 @app.route('/entries')
 def entries():
     entries = get_filtered_entries()
     entries_by_event = {}
     for entry in entries:
-        entries_by_event[entry['event_name']] = entries_by_event.get(entry['event_name'], []) + [entry]
+        entries_by_event[entry['event_name']] = entries_by_event.get(
+            entry['event_name'], []) + [entry]
     gender = user_preferences.find_one()['gender']
     points_by_team_dict = points_by_team()
     return render_template('entries.html', events=entries_by_event, points_by_team=points_by_team_dict, gender=gender)
@@ -217,20 +233,27 @@ def entries():
 def update_gender():
     request_json = request.get_json()
     gender = request_json['gender']
-    
+
     status = user_preferences.update_one({}, {'$set': {'gender': gender}})
-    
+
     if status is not None:
         return jsonify({'success': True})
     else:
         return jsonify({'success': False, 'message': 'Error updating swimmer'})
-    
+
+
 @app.route('/export', methods=['GET'])
 def export():
     cursor = collection.find()
     df = pd.DataFrame(list(cursor))
-    df.to_csv('export.csv', index=False)
-    return send_file('export.csv')
+    # drop the _id column
+    df.drop('_id', axis=1, inplace=True)
+    cur_date = dt.datetime.now()
+    formatted_datetime = cur_date.strftime("%Y-%m-%d %H:%M")
+    name = "Swim Analysis:" + formatted_datetime + ".csv"
+    df.to_csv(name, index=False)
+    return send_file(name)
+
 
 @app.route('/import_csv', methods=['POST'])
 def import_csv():
@@ -243,7 +266,8 @@ def import_csv():
         df = pd.read_csv(f)
         records = df.to_dict(orient='records')
         collection.insert_many(records)
-        return 'File successfully uploaded'
+        return redirect(url_for('entries'))
+
 
 if __name__ == '__main__':
     app.run(port=3000, debug=True)

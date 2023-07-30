@@ -23,17 +23,21 @@
 
 	<div class="container my-2">
 		<div class="row mt-3">
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<a href="/entries"
 					class="btn btn-block mt-3 btn-lg btn-outline-primary btn-info {% if request.path == '/entries' %}disabled{% endif %}">
 					Entries by Event Page</a>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<a href="/teams"
 					class="btn btn-block mt-3 btn-lg btn-outline-primary btn-info {% if request.path == '/teams' %}disabled{% endif %}">
 					Entries by Teams Page</a>
 			</div>
+			<div class="col-md-4 d-inline-block">
+				<button class="btn btn-block btn-lg btn-outline-primary btn-info" type="button" id="btn-export"  onclick="location.href='/export'">Export to CSV</button>
+			</div>
 		</div>
+
 	</div>
 
 	<div class="container my-2">
