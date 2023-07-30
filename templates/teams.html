@@ -16,9 +16,14 @@
 				<div class="col-md-5">
 					<h1>Entries by Team</h1>
 				</div>
-				<div class="col-md-6">
-					<button class="btn btn-lg btn-primary" type="button" id="btn-collapse-all-team" style="margin-top: 1.5rem;">Collapse All Teams</button>
-				</div>
+    <div class="col-md-6">
+        <button class="btn btn-lg btn-primary" type="button" id="btn-collapse-all-team" style="margin-top: 1.5rem;">Collapse All Teams</button>
+        <button class="btn btn-lg btn-primary" type="button" id="btn-export" style="margin-top: 1.5rem;" onclick="location.href='/export'">Export as CSV</button>
+        <form action="/import" method="post" enctype="multipart/form-data" style="display: inline-block; margin-top: 1.5rem;">
+            <input type="file" name="file">
+            <input type="submit" value="Import CSV" class="btn btn-lg btn-primary">
+        </form>
+    </div>
 			</div>
 		</div>
 
@@ -115,5 +120,3 @@
 	<script src="{{ url_for('static', filename='teams-delete.js') }}"></script>
 	<script src="{{ url_for('static', filename='collapsible-team.js') }}"></script>
 </body>
-
-
