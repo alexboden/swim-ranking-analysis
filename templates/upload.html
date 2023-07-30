@@ -16,23 +16,11 @@
 			<div class="col-md justify-content-center align-items-center text-center">
 				<form method="post" enctype="multipart/form-data">
 					<div class="form-group">
-						<label for="pdfFile">Select a PDF file to upload:</label>
-						<input type="file" name="file" id="pdfFile" class="form-control-file" accept=".pdf">
+						<label for="file">Select a file to upload:</label>
+						<input type="file" name="file" id="file" class="form-control-file" accept=".pdf,.csv">
 					</div>
 					<div class="form-group">
-						<input type="submit" value="Upload PDF" class="btn btn-primary">
-					</div>
-				</form>
-
-				<br>
-
-				<form method="post" action="/import_csv" enctype="multipart/form-data">
-					<div class="form-group">
-						<label for="csvFile">Select a CSV file to upload:</label>
-						<input type="file" name="file" id="csvFile" class="form-control-file" accept=".csv">
-					</div>
-					<div class="form-group">
-						<input type="submit" value="Upload CSV" class="btn btn-primary">
+						<input type="submit" value="Upload File" class="btn btn-primary">
 					</div>
 				</form>
 			</div>
