@@ -51,6 +51,7 @@ def home():
 
         elif file_type == 'csv':
             # Process the CSV
+            collection.delete_many({})
             df = pd.read_csv(file_submission)
             records = df.to_dict(orient='records')
             collection.insert_many(records)
