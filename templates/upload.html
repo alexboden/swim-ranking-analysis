@@ -23,6 +23,15 @@
 						<input type="submit" value="Upload" class="btn btn-primary">
 					</div>
 				</form>
+				<form method="post" action="/import_csv" enctype="multipart/form-data">
+					<div class="form-group">
+						<label for="csvFile">Select a CSV file to upload:</label>
+						<input type="file" name="file" id="csvFile" class="form-control-file" accept=".csv">
+					</div>
+					<div class="form-group">
+						<input type="submit" value="Upload CSV" class="btn btn-primary">
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
