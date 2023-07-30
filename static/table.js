@@ -1,3 +1,47 @@
+document.querySelectorAll('.new-entry-form').forEach(form => {
+  form.addEventListener('submit', function(event) {
+    event.preventDefault();
+    let data = {
+      ranking: this.elements['ranking'].value,
+      name: this.elements['name'].value,
+      seed_time: this.elements['seed_time'].value,
+      team_name: this.elements['team_name'].value,
+      points: this.elements['points'].value
+    };
+    fetch('/new_entry', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        let table = this.previousElementSibling;
+        let newRow = table.insertRow(-1);
+        newRow.innerHTML = `
+          <td>${data.entry.ranking}</td>
+          <td>${data.entry.name}</td>
+          <td>${data.entry.seed_time}</td>
+          <td>${data.entry.team_name}</td>
+          <td>${data.entry.points}</td>
+          <td>
+            <button type="button" class="btn btn-move-up btn-success">Move Up</button>
+            <button type="button" class="btn btn-move-down">Move Down</button>
+            <button type="button" class="btn btn-delete btn-danger">Delete</button>
+          </td>
+        `;
+      } else {
+        console.error('Error adding new entry:', data.message);
+      }
+    })
+    .catch(error => {
+      console.error('Network error:', error);
+    });
+  });
+});
+
 function updatePointTotals() {
   fetch('/points_by_team')
     .then(response => response.json())
@@ -199,4 +243,3 @@ function updateSwimmerEvent(event, name, rank, points) {
 		console.error('Network error:', error);
 	});
 }
-
