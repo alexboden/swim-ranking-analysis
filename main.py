@@ -278,5 +278,28 @@ def import_csv():
         return redirect(url_for('entries'))
 
 
+@app.route('/new_entry', methods=['POST'])
+def new_entry():
+    request_json = request.get_json()
+    ranking = request_json['ranking']
+    name = request_json['name']
+    seed_time = request_json['seed_time']
+    team_name = request_json['team_name']
+    points = request_json['points']
+
+    # Insert the new entry into the database
+    result = collection.insert_one({
+        'ranking': ranking,
+        'name': name,
+        'seed_time': seed_time,
+        'team_name': team_name,
+        'points': points
+    })
+
+    if result.inserted_id:
+        return jsonify({'success': True, 'entry': request_json})
+    else:
+        return jsonify({'success': False, 'message': 'Error inserting new entry'})
+
 if __name__ == '__main__':
     app.run(port=3000, debug=True)
