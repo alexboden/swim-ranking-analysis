@@ -27,6 +27,4 @@ https://user-images.githubusercontent.com/43760105/235479394-f62cce52-17b0-4787-
 	- add delete event functionality
 	- add collapse entries button
 
-- Add option to export data for future use
 - Add relays
-- Integrate past meet data extraction
