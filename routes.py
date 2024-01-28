@@ -3,10 +3,14 @@ from flask import render_template, request, jsonify, redirect, url_for, send_fil
 from Meet.meet import Meet
 from config import individual_points, MAX_INDIVIDUAL_EVENTS
 import pandas as pd
-from app import app, db
 from pypdf import PdfReader
+from flask import Blueprint
+from database import Database
 
-@app.route('/', methods=['GET', 'POST'])
+bp = Blueprint('routes', __name__)
+db = Database()
+
+@bp.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
         # Check if a file was uploaded
@@ -40,12 +44,12 @@ def home():
         else:
             return render_template('upload.html', error='File must be a PDF or CSV.')
 
-        return redirect(url_for('entries'))
+        return redirect(url_for('routes.entries'))
 
     return render_template('upload.html')
 
 
-@app.route('/swap_swimmers', methods=['POST'])
+@bp.route('/swap_swimmers', methods=['POST'])
 def swap_swimmers():
     request_json = request.get_json()
     event, swimmer1, swimmer2 = request_json['event'], request_json['name1'], request_json['name2']
@@ -67,7 +71,7 @@ def swap_swimmers():
         return jsonify({'success': False, 'message': 'Error updating database'})
 
 
-@app.route('/delete_swimmer', methods=['POST'])
+@bp.route('/delete_swimmer', methods=['POST'])
 def delete_swimmer():
     request_json = request.get_json()
     event, swimmer = request_json['event'], request_json['name']
@@ -100,7 +104,7 @@ def delete_swimmer():
         return jsonify({'success': False, 'message': 'Error deleting swimmer'})
 
 
-@app.route('/update_swimmer', methods=['POST'])
+@bp.route('/update_swimmer', methods=['POST'])
 def update_swimmer():
     request_json = request.get_json()
     event, swimmer, ranking = request_json['event'], request_json['name'], request_json['rank']
@@ -118,7 +122,7 @@ def update_swimmer():
         return jsonify({'success': False, 'message': 'Error updating swimmer'})
 
 
-@app.route('/points_by_team')
+@bp.route('/points_by_team')
 def points_by_team():
     entries = db.get_filtered_entries()
     points_by_team = {}
@@ -130,7 +134,7 @@ def points_by_team():
     return {k: v for k, v in sorted( points_by_team.items(), key=lambda item: item[1], reverse=True)}
 
 
-@app.route('/entries_by_team')
+@bp.route('/entries_by_team')
 def entries_by_team():
     entries = db.get_filtered_entries()
     ret = {}
@@ -163,7 +167,7 @@ def entries_by_team():
     return ret
 
 
-@app.route('/teams')
+@bp.route('/teams')
 def teams():
     entries_by_team_dict = entries_by_team()
     points_by_team_dict = points_by_team()
@@ -171,7 +175,7 @@ def teams():
     return render_template('teams.html', points_by_team=points_by_team_dict, entries_by_team=entries_by_team_dict, individual_points=individual_points, gender=gender)
 
 
-@app.route('/entries')
+@bp.route('/entries')
 def entries():
     entries = db.get_filtered_entries()
     entries_by_event = {}
@@ -183,7 +187,7 @@ def entries():
     return render_template('entries.html', events=entries_by_event, points_by_team=points_by_team_dict, gender=gender)
 
 
-@app.route('/update_gender', methods=['POST'])
+@bp.route('/update_gender', methods=['POST'])
 def update_gender():
     request_json = request.get_json()
     gender = request_json['gender']
@@ -196,8 +200,8 @@ def update_gender():
         return jsonify({'success': False, 'message': 'Error updating swimmer'})
 
 
-@app.route('/export', methods=['GET'])
+@bp.route('/export', methods=['GET'])
 def export():
-    db.export_to_csv()
-
+    file_path = db.export_to_csv()
+    return send_file(file_path, mimetype='text/csv', as_attachment=True)
 

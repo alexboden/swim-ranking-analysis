@@ -17,20 +17,21 @@ class Database:
             self.user_preferences.insert_one({'gender': 'Men'})
 
     def load_from_csv(self, path):
-            self.clear_database()
-            df = self.read_csv(path)
-            records = df.to_dict(orient='records')
-            self.collection.insert_many(records) 
+        self.clear_database()
+        df = self.read_csv(path)
+        records = df.to_dict(orient='records')
+        self.collection.insert_many(records) 
     
     def export_to_csv(self):
-            cursor = self.collection.find()
-            df = pd.DataFrame(list(cursor))
-            # drop the _id column
-            df = df.drop('_id', axis=1)
-            cur_date = dt.datetime.now()
-            formatted_datetime = cur_date.strftime("%Y-%m-%d %H:%M")
-            name = "Swim Analysis:" + formatted_datetime + ".csv"
-            df.to_csv(name, index=False)
+        cursor = self.collection.find()
+        df = pd.DataFrame(list(cursor))
+        # drop the _id column
+        df = df.drop('_id', axis=1)
+        cur_date = dt.datetime.now()
+        formatted_datetime = cur_date.strftime("%Y-%m-%d %H:%M")
+        name = "Swim Analysis:" + formatted_datetime + ".csv"
+        df.to_csv(name, index=False)
+        return name
     
     def get_current_gender(self):
         return self.user_preferences.find_one()['gender']
