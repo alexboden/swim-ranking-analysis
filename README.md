@@ -22,6 +22,10 @@ https://user-images.githubusercontent.com/43760105/235479394-f62cce52-17b0-4787-
 `python main.py`
 
 ## Working On
+- UI fix for buttons
+- Refactor main.py
+- Add gender to entry
+
 - By Team Page
 	- add delete swimmer functionality 
 	- add delete event functionality
