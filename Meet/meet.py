@@ -46,11 +46,6 @@ class Meet:
                         break
                 if not duplicate:
                     self.events += [e]
-
-            else:
-                continue
-                # print(extracted_text[regex.find_event_headers(extracted_text)[i][0]:regex.find_event_headers(extracted_text)[i][1]])
-
     
     def get_swimmer_breakdown(self, gender):
         swimmer_breakdown = {}

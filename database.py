@@ -12,9 +12,9 @@ class Database:
         self.clear_database()
     
     def clear_database(self):
-            self.collection.delete_many({})
-            self.user_preferences.delete_many({})
-            self.user_preferences.insert_one({'gender': 'Men'})
+        self.collection.delete_many({})
+        self.user_preferences.delete_many({})
+        self.user_preferences.insert_one({'gender': 'Men'})
 
     def load_from_csv(self, path):
         self.clear_database()
@@ -42,7 +42,6 @@ class Database:
         entries = self.collection.find()
         filtered_entries = []
 
-        # TODO Clean this up
         for entry in entries:
             if "Women" in entry['event_name'] and current_gender == "Women":
                 filtered_entries.append(entry)
