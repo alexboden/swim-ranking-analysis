@@ -1,5 +1,6 @@
 from Meet.entry import Entry
 
+
 class Swimmer:
     """
     Represents a swimmer in a meet.

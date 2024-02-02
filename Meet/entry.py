@@ -1,6 +1,8 @@
-from abc import ABC, abstractmethod
 import re
+from abc import ABC, abstractmethod
+
 from config import individual_points
+
 
 class Entry(ABC):
     """

@@ -1,7 +1,9 @@
 import re
+
 from Meet.event import Event
 from Meet.swimmer import Swimmer
 from Meet.team import Team
+
 
 class Meet:
     EVENT_HEADER = "Event.*?Time"

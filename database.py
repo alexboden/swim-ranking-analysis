@@ -1,7 +1,8 @@
-# database.py
-from pymongo import MongoClient
-import pandas as pd
 import datetime as dt
+
+import pandas as pd
+from pymongo import MongoClient
+
 
 class Database:
     def __init__(self):

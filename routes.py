@@ -1,11 +1,12 @@
 import datetime as dt
-from flask import render_template, request, jsonify, redirect, url_for, send_file
-from Meet.meet import Meet
-from config import individual_points, MAX_INDIVIDUAL_EVENTS
+
 import pandas as pd
+from flask import (Blueprint, jsonify, render_template, request, send_file)
 from pypdf import PdfReader
-from flask import Blueprint
+
+from config import MAX_INDIVIDUAL_EVENTS, individual_points
 from database import Database
+from Meet.meet import Meet
 
 bp = Blueprint('routes', __name__)
 db = Database()

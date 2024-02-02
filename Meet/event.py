@@ -1,5 +1,7 @@
-from Meet.entry import IndividualEntry, RelayEntry
 import re
+
+from Meet.entry import IndividualEntry, RelayEntry
+
 
 class Event:
     """

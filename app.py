@@ -1,6 +1,6 @@
 # app.py
 from flask import Flask
-from database import Database
+
 import routes
 
 
