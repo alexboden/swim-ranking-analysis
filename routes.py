@@ -44,8 +44,6 @@ def home():
         else:
             return render_template('upload.html', error='File must be a PDF or CSV.')
 
-        return redirect(url_for('routes.entries'))
-
     return render_template('upload.html')
 
 
@@ -157,6 +155,7 @@ def entries_by_team():
 
     # sort by total points
     ret = {k: v for k, v in sorted(ret.items(), key=lambda item: item[1]['points'], reverse=True)}
+
     # sort each team's swimmers by their total points ie the value of the 'points' key
     for team_name, team_data in ret.items():
         swimmers = team_data['swimmers']

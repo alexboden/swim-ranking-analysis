@@ -57,15 +57,8 @@ deleteButtons.forEach(button => {
 
 	// Get a reference to the element with id = swimmer_name
 	let swimmerDiv = document.getElementById(swimmerName.replace(' ', '') + "-header");
-
-	// Update the text content of the element
-	// use the current number of entries to calculate the new point total
-	// <h4>{{ swimmer_name }} - {{ swimmer_data['entries']|length }} Entries - {{ swimmer_data['points'] }} Points</h4>
-
 	let numberOfEntries = swimmerDiv.textContent.split(" ")[3] - 1;
 	let points = swimmerDiv.textContent.split(" ")[6];
-	console.log('points: ' + points);
-	console.log('eventPoints: ' + eventPoints);
 
 	swimmerDiv.textContent = `${swimmerName} - ${numberOfEntries} Entries - ${points - eventPoints} Points`
 	//wait 1 second before updating the point totals
