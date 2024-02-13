@@ -41,12 +41,16 @@ class IndividualEntry(Entry):
                     Must be in the format of "team_name seed_time age name ranking".
         """
         self.event_name = event_name
+        print("event_string: ", event_string)
   
         seed_time_search = re.search(Entry.TIME_PATTERN, event_string)
+        print("seed_time_search: ", seed_time_search)
 
         self.team_name = event_string[0:seed_time_search.start()].strip()
+        print("self.team_name: ", self.team_name)
         self.seed_time = event_string[seed_time_search.start():seed_time_search.end()].strip()
         
+        print("self.seed_time: ", self.seed_time)
         rest_of_string = event_string[seed_time_search.end():].strip()
         self.age = rest_of_string[0:rest_of_string.find(" ")].strip()
         
@@ -54,7 +58,12 @@ class IndividualEntry(Entry):
         
         ranking_search = re.search("[0-9]+", rest_of_string)
         self.name = rest_of_string[0:ranking_search.start()].strip()
+        # if name ends with " Q", remove it
+        if self.name.endswith(" Q"):
+            self.name = self.name[:-2]
+        print("self.name: ", self.name)
         self.ranking = int(rest_of_string[ranking_search.start():ranking_search.end()].strip())
+        print("self.ranking: ", self.ranking)
         if self.ranking in individual_points:
             self.points = individual_points[self.ranking]
         else:

@@ -28,6 +28,8 @@ class Meet:
         """
         self.events = []
         event_header_strings = self.find_event_headers(extracted_text)
+        for i in range(len(event_header_strings)):
+            print(extracted_text[event_header_strings[i][0]:event_header_strings[i][1]])
 
         for i in range(len(event_header_strings)):
             if (i != len(event_header_strings) - 1):

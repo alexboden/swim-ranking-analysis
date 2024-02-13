@@ -15,8 +15,8 @@ class Event:
         Whether the event is a relay event or not.
     entries : List[Union[IndividualEntry, RelayEntry]]
         A list of the entries for the event.
-	gender : str
-		Gender that is competing in the event.
+    gender : str
+        Gender that is competing in the event.
     Methods:
     --------
     __init__(self, event_header_string: str, entry_string: str) -> None
@@ -28,7 +28,9 @@ class Event:
     """
     
     # Regex patterns
-    EVENT_PATTERN = "[a-zA-Z].*?\s*(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]|NT)\s*\d\d\s\D*\d*"
+    # EVENT_PATTERN = "[a-zA-Z].*?\s*(([0-5]?[0-9]:)?[0-5][0-9]\.[0-9][0-9]|NT)\s*\d\d\s\D*\d*"
+    # EVENT_PATTERN = "([A-Z]+)\s+(\d{1,2}:\d{2}\.\d{2})\s+(\d+)\s+([A-Za-z'-]+),\s+([A-Za-z'-]+)\s+Q\s+(\d+)"
+    EVENT_PATTERN = r"([A-Z]+)\s+((\d{1,2}:)?\d{2}\.\d{2})\s+(\d+)\s+([A-Za-z'-]+),\s+([A-Za-z'-]+)(\s+Q)?( \d+)"
 
     def __init__(self, event_header_string, entry_string):
         if "Relay" in event_header_string:
@@ -56,10 +58,10 @@ class Event:
 
         self.entries = []
         entry_strings = self.__separate_entries_individual(entry_string)
-        for entry_string in entry_strings:
-            if "_" in entry_string:
+        for e in entry_strings:
+            if "_" in e:
                 continue
-            self.entries.append(IndividualEntry(entry_string, self.event_name))
+            self.entries.append(IndividualEntry(e, self.event_name))
 
     def __separate_entries_individual(self, input_string):
         """
@@ -75,6 +77,14 @@ class Event:
         List[str]
             A list of individual entry strings.
         """
+        print("input_string: ", input_string)
+        # write a regex pattern to a file
+        with open("regex.txt", "w") as f:
+            f.write(input_string)
+        print("Event.EVENT_PATTERN: ", Event.EVENT_PATTERN)
+        print("re.finditer(Event.EVENT_PATTERN, input_string): ", re.finditer(Event.EVENT_PATTERN, input_string))
+        for name in re.finditer(Event.EVENT_PATTERN, input_string):
+            print("name: ", name)
         it = re.finditer(Event.EVENT_PATTERN, input_string)
         ret = []
         for name in it:
